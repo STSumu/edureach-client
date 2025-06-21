@@ -2,6 +2,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import Navbar from "../components/navbar";
 import HomeLayout from "../layouts/HomeLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/Login";
