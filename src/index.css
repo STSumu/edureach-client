@@ -4,3 +4,10 @@
 .roboto-font {
   font-family: "Roboto", sans-serif;
 }
+
+.outline-text {
+  color: white;
+  -webkit-text-stroke: 2px black;
+  /* Optional smoother rendering */
+  text-shadow: 1px 1px 0 black;
+}
