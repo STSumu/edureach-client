@@ -6,12 +6,12 @@ import Footer from '../components/Footer';
 const HomeLayout = () => {
     return (
         <>
-        <header className='bg-cover bg-center' style={{ backgroundImage: `url(/herobg2.svg)`}}>
+        <header className='bg-cover bg-center text-black' style={{ backgroundImage: `url(/herobg2.svg)`}}>
            {/* navbar */}
            <Navbar></Navbar>
            {/* banner */}
         </header>
-        <main className='container mx-auto bg-[#F2EEEC] px-2 md:px-25'>
+        <main className='container mx-auto bg-[#F2EEEC] px-2 md:px-25 text-black'>
            <Outlet></Outlet>
         </main>
         <footer className='bg-[#F2EEEC] px-2 md:px-25' style={{ backgroundImage: `url(/herobg2.svg)`,backgroundPosition:'right'}} > 

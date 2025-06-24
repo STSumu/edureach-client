@@ -19,7 +19,7 @@ const Navbar = () => {
         <NavLink to="/profile">Profile</NavLink>
       </li>
       <li>
-        <NavLink to="/contact">Contact</NavLink>
+        <NavLink to="/auth/login">Contact</NavLink>
       </li>
     </>
   );

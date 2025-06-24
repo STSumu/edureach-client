@@ -8,7 +8,7 @@ const AuthLayout = () => {
             <header>
                 <Navbar></Navbar>
             </header>
-            <main>
+            <main className='h-screen py-4'>
                 <Outlet></Outlet>
             </main>
             <footer>

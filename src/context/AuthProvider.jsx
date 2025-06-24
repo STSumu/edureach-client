@@ -1,7 +1,15 @@
+
+import { createContext } from "react";
+import app from "../firebase/firebase.init";
+import {getAuth, GoogleAuthProvider, signInWithPopup} from "firebase/auth"
+
+export const authContext=createContext();
 import { createContext, useEffect, useState } from "react";
 
-export const authContext=createContext()
+
 const AuthProvider = ({children}) => {
+    const auth=getAuth(app);
+
     const [courses,setCourses]=useState([]);
     useEffect(()=>{
         fetch(`${baseUrl}/courses`)
@@ -10,11 +18,18 @@ const AuthProvider = ({children}) => {
             setCourses(data);
         })
     },[])
-    const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
+    const baseUrl = import.meta.env.VITE_API_BASE_URL;
+    const googleProvider=new GoogleAuthProvider();
+
+    const googlelogin=()=>{
+        return signInWithPopup(auth,googleProvider);
+    }
     const authInfo={
         baseUrl,
+        googlelogin,
         courses,
+
     }
     return (
         <authContext.Provider value={authInfo}>
