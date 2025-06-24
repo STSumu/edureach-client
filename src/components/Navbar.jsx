@@ -1,7 +1,6 @@
 import logo from "../assets/logo.png";
 import { NavLink } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
-
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 
 const Navbar = () => {

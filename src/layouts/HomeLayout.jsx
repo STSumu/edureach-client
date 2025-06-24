@@ -9,7 +9,6 @@ const HomeLayout = () => {
         <header className='bg-cover bg-center' style={{ backgroundImage: `url(/herobg2.svg)`}}>
            {/* navbar */}
            <Navbar></Navbar>
-           <Banner></Banner>
            {/* banner */}
         </header>
         <main className='container mx-auto bg-[#F2EEEC] px-2 md:px-25'>

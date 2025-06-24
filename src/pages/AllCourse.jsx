@@ -1,8 +1,8 @@
-import React, { useContext} from 'react';
-import Course from '../components/Course';
+import React, { useContext } from 'react';
 import { authContext } from '../context/AuthProvider';
+import Course from '../components/Course';
 
-const Courses = () => {
+const AllCourse = () => {
     const {courses}=useContext(authContext);
     return (
         <div>
@@ -12,11 +12,11 @@ const Courses = () => {
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10'>
                 {
-                courses.slice(0,6).map((course,idx)=><Course key={idx} course={course}></Course>)
+                courses.map((course,idx)=><Course key={idx} course={course}></Course>)
             }
             </div>
         </div>
     );
 };
 
-export default Courses;
+export default AllCourse;
