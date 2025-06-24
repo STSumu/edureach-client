@@ -5,6 +5,7 @@ import HomeLayout from "../layouts/HomeLayout";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Home from "../pages/Home";
+import AuthLayout from "../layouts/AuthLayout";
 
 
 export const router = createBrowserRouter([
@@ -13,14 +14,14 @@ export const router = createBrowserRouter([
     element:<HomeLayout></HomeLayout>,
     children:[
       {
-        path:'/home',
+        path:'/',
         element:<Home></Home>,
       },
     ]
   },
   {
     path:'/auth',
-    element:<h1>auth</h1>,
+    element:<AuthLayout></AuthLayout>,
     children:[
       {
         path:'/auth/login',
