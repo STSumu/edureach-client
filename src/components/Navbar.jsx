@@ -2,55 +2,58 @@ import logo from "../assets/logo.png";
 import { NavLink } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 
-import { FaShoppingCart, FaUserCircle} from "react-icons/fa";
-
-
+import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 
 const Navbar = () => {
- const links = (
-  <>
-    <li>
-      <NavLink
-        to="/"
-        className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
-      >
-        Home
+  const links = (
+    <>
+      <li>
+        <NavLink
+          to="/"
+          className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
+        >
+          Home
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/about"
+          className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
+        >
+          About
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/courses"
+          className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
+        >
+          Courses
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/profile"
+          className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
+        >
+          Profile
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/contact"
+          className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
+        >
+          Contact
+        </NavLink>
+      </li>
+      <NavLink to="/login">
+        <button className="btn font-bold px-5 ml-8 mt-2 btn-outline btn-sm rounded-md  hover:bg-gray-100">
+          Login
+        </button>
       </NavLink>
-    </li>
-    <li>
-      <NavLink
-        to="/about"
-        className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
-      >
-        About
-      </NavLink>
-    </li>
-    <li>
-      <NavLink
-        to="/courses"
-        className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
-      >
-        Courses
-      </NavLink>
-    </li>
-    <li>
-      <NavLink
-        to="/profile"
-        className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
-      >
-        Profile
-      </NavLink>
-    </li>
-    <li>
-      <NavLink
-        to="/contact"
-        className="block px-4 py-2 text-lg font-bold border border-transparent hover:border-gray-400 rounded-md transition duration-300"
-      >
-        Contact
-      </NavLink>
-    </li>
-  </>
-);
+    </>
+  );
 
   return (
     <div className="navbar bg-base-100 shadow-sm">
@@ -94,37 +97,40 @@ const Navbar = () => {
         </div>
       </div>
 
-     <div className="navbar-center hidden lg:flex">
-  <ul className="menu menu-horizontal px-1 space-x-4">{links}</ul>
-     </div>
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal px-1 space-x-4">{links}</ul>
+      </div>
 
-<div className="navbar-end flex items-center ml-auto space-x-4 pr-4">
-  <div className="relative">
-    <label className="input">
-  <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <g
-      strokeLinejoin="round"
-      strokeLinecap="round"
-      strokeWidth="2.5"
-      fill="none"
-      stroke="currentColor"
-    >
-      <circle cx="11" cy="11" r="8"></circle>
-      <path d="m21 21-4.3-4.3"></path>
-    </g>
-  </svg>
-  <input type="search" className="grow" placeholder="Search" />
-</label>
+      <div className="navbar-end flex items-center ml-auto space-x-4 pr-4">
+        <div className="relative">
+          <label className="input">
+            <svg
+              className="h-[1em] opacity-50"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <g
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                strokeWidth="2.5"
+                fill="none"
+                stroke="currentColor"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </g>
+            </svg>
+            <input type="search" className="grow" placeholder="Search" />
+          </label>
+        </div>
 
-  </div>
-
-  <button className="text-2xl text-black hover:text-black transition duration-200">
-    <FaShoppingCart />
-  </button>
-  <button className="text-2xl text-gray-600 hover:text-black transition duration-200">
-    <FaUserCircle />
-  </button>
-</div>
+        <button className="text-2xl text-black hover:text-black transition duration-200">
+          <FaShoppingCart />
+        </button>
+        <button className="text-2xl text-gray-600 hover:text-black transition duration-200">
+          <FaUserCircle />
+        </button>
+      </div>
     </div>
   );
 };
