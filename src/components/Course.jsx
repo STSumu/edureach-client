@@ -1,27 +1,45 @@
 import React from 'react';
+import { FaUserTie } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Course = ({course}) => {
     console.log(course);
-    const {category,course_name,instructor,duration,price}=course;
+    const {category,course_name,instructor,duration,price,thumb_url,instructorImg}=course;
     return (
-        <div className="card bg-base-100 shadow-sm">
-  <figure>
-    <img
-      src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-      alt="Shoes" />
+        <Link to={`/course/${course_name}`} className='h-full'>
+        <div className="h-full card bg-[#EEBF9F]/10 md:p-6 rounded-2xl shadow-xl overflow-hidden p-4 max-w-sm flex flex-col justify-between">
+  <figure className='h-1/2 rounded-xl'>
+    <img className='w-full object-cover rounded-xl'
+      src={thumb_url}
+      alt={course_name} />
   </figure>
-  <div className="card-body">
-    <h2 className="card-title">
-      Card Title
-      <div className="badge badge-secondary">NEW</div>
+  <div >
+    <p className='uppercase text-xs mt-4 tracking-widest'>{category}</p>
+    <h2 className="text-lg font-semibold mt-1 leading-snug">
+      {course_name}
     </h2>
-    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-    <div className="card-actions justify-end">
-      <div className="badge badge-outline">Fashion</div>
-      <div className="badge badge-outline">Products</div>
+    <div className='flex items-center justify-between'>
+        <div className='flex justify-between items-center gap-4 my-3'>
+            {instructorImg ? <img src={instructorImg} className='w-8 h-8 rounded-full' alt="" /> : <FaUserTie className='w-8 h-8 rounded-full'></FaUserTie>}
+            <p>{instructor}</p>
+        </div>
+        <div>
+            <p>{duration}</p>
+        </div>
     </div>
+          <div className="flex items-center justify-between mt-4">
+        <div>
+          <p className="text-lg font-bold">${price}
+          </p>
+        </div>
+        <button className="bg-[#A75A44] text-white hover:bg-[#EEBF9F] hover:text-black hover:animate__zoomIn px-5 py-2 rounded-xl transition">
+          Join Course
+        </button>
+      </div>
+     
   </div>
 </div>
+        </Link>
     );
 };
 

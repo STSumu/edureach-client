@@ -6,6 +6,8 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Home from "../pages/Home";
 import AuthLayout from "../layouts/AuthLayout";
+import AllCourse from "../pages/AllCourse";
+import CourseDetails from "../components/CourseDetails";
 
 
 export const router = createBrowserRouter([
@@ -17,6 +19,14 @@ export const router = createBrowserRouter([
         path:'/',
         element:<Home></Home>,
       },
+      {
+        path:'/courses',
+        element:<AllCourse></AllCourse>,
+      },
+      {
+        path:'/course/:course_name',
+        element:<CourseDetails></CourseDetails>,
+      }
     ]
   },
   {
