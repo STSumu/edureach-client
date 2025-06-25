@@ -4,7 +4,7 @@ import app from "../firebase/firebase.init";
 import {getAuth, GoogleAuthProvider, signInWithPopup} from "firebase/auth"
 
 export const authContext=createContext();
-import { createContext, useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 
 
 const AuthProvider = ({children}) => {
