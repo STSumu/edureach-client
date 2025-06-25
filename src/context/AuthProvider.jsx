@@ -6,7 +6,8 @@ import {getAuth,
   signInWithEmailAndPassword, signInWithPopup,createUserWithEmailAndPassword} from "firebase/auth"
 
 export const authContext=createContext();
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
+
 
 
 const AuthProvider = ({children}) => {
