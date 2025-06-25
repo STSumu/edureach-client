@@ -1,12 +1,28 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { authContext } from "../context/AuthProvider";
+import Swal from "sweetalert2";
 
 const Login = () => {
+  const { emaillogin } = useContext(authContext);
   const handleLogin = (e) => {
     e.preventDefault(); // Add this
-  const email=e.target.email.value;
-  const pass=e.target.password.value;
-
+    const email = e.target.email.value;
+    const pass = e.target.password.value;
+    emaillogin(email, pass)
+      .then((result) => {
+        const lastLogin = result.user.metadata.lastSignInTime;
+        Swal.fire({
+          title: "Sucess",
+          icon: "success",
+          text: "User Created Successfully",
+          draggable: true,
+        });
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
   };
   return (
     <div className="flex flex-col-reverse pt-20 md:pt-6 md:flex-row justify-between items-center px-3 md:pr-15 lg:pr-35">
@@ -48,7 +64,9 @@ const Login = () => {
         </form>
         <p className="text-sm md:text-base">
           Don't have an account?{" "}
-          <Link to="/auth/register" className="text-red-800 hover:underline">Register</Link>
+          <Link to="/auth/register" className="text-red-800 hover:underline">
+            Register
+          </Link>
         </p>
         <button className="btn   bg-[#A75A44] w-full text-base text-white">
           Log in with Google

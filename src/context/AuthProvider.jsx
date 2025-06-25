@@ -1,10 +1,13 @@
 
 import { createContext } from "react";
 import app from "../firebase/firebase.init";
-import {getAuth, GoogleAuthProvider, signInWithPopup} from "firebase/auth"
+import {getAuth,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword, signInWithPopup,createUserWithEmailAndPassword} from "firebase/auth"
 
 export const authContext=createContext();
 import {useEffect, useState } from "react";
+
 
 
 const AuthProvider = ({children}) => {
@@ -22,12 +25,20 @@ const AuthProvider = ({children}) => {
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
     const googleProvider=new GoogleAuthProvider();
 
+    const emailSignup=(email,password)=>{
+        return createUserWithEmailAndPassword(auth,email,password);
+    }
+    const emaillogin=(email,password)=>{
+        return signInWithEmailAndPassword(auth,email,password);
+    }
     const googlelogin=()=>{
         return signInWithPopup(auth,googleProvider);
     }
     const authInfo={
         baseUrl,
         googlelogin,
+        emailSignup,
+        emaillogin,
         courses,
 
     }
