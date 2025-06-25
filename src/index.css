@@ -15,8 +15,9 @@
   /* Optional smoother rendering */
   text-shadow: 1px 1px 0 black;
 }
-a .active{
+a.active{
   background-color: #f09c63;
   color:black;
   font-weight: bold;
+  border:1px solid black;
 }

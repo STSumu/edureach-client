@@ -7,19 +7,31 @@ import Register from "../pages/Register";
 import Home from "../pages/Home";
 import AuthLayout from "../layouts/AuthLayout";
 import Error from "../pages/Error";
+import AllCourse from "../pages/AllCourse";
+import CourseDetails from "../components/CourseDetails";
+
 
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element:<HomeLayout></HomeLayout>,
+     errorElement:<Error></Error>,
     children:[
       {
         path:'/',
         element:<Home></Home>,
       },
-    ],
-    errorElement:<Error></Error>
+      {
+        path:'/courses',
+        element:<AllCourse></AllCourse>,
+      },
+      {
+        path:'/course/:course_name',
+        element:<CourseDetails></CourseDetails>,
+      }
+    ]
+
   },
   {
     path:'/auth',

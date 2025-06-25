@@ -1,13 +1,16 @@
 import Courses from '../sections/Courses';
 import BlueBox from '../components/BlueBox.jsx'
-import Chooseus from '../components/Chooseus.jsx'
+import Chooseus from '../components/Chooseus.jsx'            
+import Banner from '../components/Banner';
+
 const Home = () => {
     return (
-        <div>
-             <BlueBox></BlueBox>
+        <>
+            <Banner></Banner>
+            <BlueBox></BlueBox>
             <Chooseus></Chooseus>
             <Courses></Courses>
-        </div>
+        </>
     );
 };
 
