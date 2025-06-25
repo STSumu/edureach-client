@@ -6,6 +6,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Home from "../pages/Home";
 import AuthLayout from "../layouts/AuthLayout";
+import Error from "../pages/Error";
 
 
 export const router = createBrowserRouter([
@@ -17,7 +18,8 @@ export const router = createBrowserRouter([
         path:'/',
         element:<Home></Home>,
       },
-    ]
+    ],
+    errorElement:<Error></Error>
   },
   {
     path:'/auth',
