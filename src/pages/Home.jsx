@@ -1,15 +1,16 @@
 import Courses from '../sections/Courses';
 import BlueBox from '../components/BlueBox.jsx'
 import Chooseus from '../components/Chooseus.jsx'            
-import Banner from '../components/Banner';
+import Banner from '../components/Banner.jsx';
 
 const Home = () => {
     return (
         <>
-            <Banner></Banner>
+        <main className='container mx-auto px-2 md:px-6 lg:px-25 flex flex-col gap-4 md:gap-10'>
             <BlueBox></BlueBox>
             <Chooseus></Chooseus>
             <Courses></Courses>
+        </main>
         </>
     );
 };

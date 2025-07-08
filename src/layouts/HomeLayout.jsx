@@ -10,11 +10,12 @@ const HomeLayout = () => {
            {/* navbar */}
            <Navbar></Navbar>
            {/* banner */}
+           <Banner></Banner>
         </header>
-        <main className='container mx-auto bg-[#F2EEEC] px-2 md:px-25 text-black'>
+        <main className='bg-[#F2EEEC] text-black py-4 md:py-8'>
            <Outlet></Outlet>
         </main>
-        <footer className='bg-[#F2EEEC] px-2 md:px-25' style={{ backgroundImage: `url(/herobg2.svg)`,backgroundPosition:'right'}} > 
+        <footer className='bg-[#F2EEEC]'> 
             <Footer></Footer>
         </footer>
         </>

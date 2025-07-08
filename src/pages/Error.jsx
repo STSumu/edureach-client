@@ -9,6 +9,7 @@ const Error = () => {
       src="/Error.lottie"
       loop
       autoplay
+      className='w-full h-1/2 md:h-2/3 md:w-2/3'
     />
         <h1 className='text-4xl text-[#e47331] font-semibold mb-5'>Page Not Found</h1>
         <Link

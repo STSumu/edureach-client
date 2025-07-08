@@ -1,6 +1,4 @@
-import {
-  createBrowserRouter,
-} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import HomeLayout from "../layouts/HomeLayout";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -11,36 +9,33 @@ import AllCourse from "../pages/AllCourse";
 import CourseDetails from "../components/CourseDetails";
 import CartItem from "../components/CartItem";
 
-
-
 export const router = createBrowserRouter([
   {
     path: "/",
-    element:<HomeLayout></HomeLayout>,
-     errorElement:<Error></Error>,
-    children:[
+    element: <HomeLayout></HomeLayout>,
+    errorElement: <Error></Error>,
+    children: [
       {
-        path:'/',
-        element:<Home></Home>,
+        path: "/",
+        element: <Home></Home>,
       },
       {
-        path:'/courses',
-        element:<AllCourse></AllCourse>,
+        path: "/courses",
+        element: <AllCourse></AllCourse>,
       },
       {
-        path:'/course/:course_name',
-        element:<CourseDetails></CourseDetails>,
-      }
-    ]
-
+        path: "/course/:course_name",
+        element: <CourseDetails />,
+      },
+    ],
   },
   {
-    path:'/auth',
-    element:<AuthLayout></AuthLayout>,
-    children:[
+    path: "/auth",
+    element: <AuthLayout></AuthLayout>,
+    children: [
       {
-        path:'/auth/login',
-        element:<Login></Login>,
+        path: "/auth/login",
+        element: <Login></Login>,
       },
       {
         path:'/auth/register',
@@ -53,3 +48,4 @@ export const router = createBrowserRouter([
     element:<CartItem></CartItem>,
   }
 ]);
+
