@@ -3,7 +3,9 @@ import { createContext } from "react";
 import app from "../firebase/firebase.init";
 import {getAuth,
   GoogleAuthProvider,
-  signInWithEmailAndPassword, signInWithPopup,createUserWithEmailAndPassword} from "firebase/auth"
+  signInWithEmailAndPassword, signInWithPopup,createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut} from "firebase/auth"
 
 export const authContext=createContext();
 import {useEffect, useState } from "react";
@@ -12,6 +14,8 @@ import {useEffect, useState } from "react";
 
 const AuthProvider = ({children}) => {
     const auth=getAuth(app);
+    const [user,setUser]=useState(null);
+    const [loading,setLoading]=useState(true);
 
     const [courses,setCourses]=useState([]);
     useEffect(()=>{
@@ -26,13 +30,20 @@ const AuthProvider = ({children}) => {
     const googleProvider=new GoogleAuthProvider();
 
     const emailSignup=(email,password)=>{
+        setLoading(true);
         return createUserWithEmailAndPassword(auth,email,password);
     }
     const emaillogin=(email,password)=>{
+        setLoading(true);
         return signInWithEmailAndPassword(auth,email,password);
     }
     const googlelogin=()=>{
+        setLoading(true);
         return signInWithPopup(auth,googleProvider);
+    }
+    const logOut=()=>{
+        setLoading(true);
+        return signOut(auth);
     }
     const authInfo={
         baseUrl,
@@ -40,8 +51,20 @@ const AuthProvider = ({children}) => {
         emailSignup,
         emaillogin,
         courses,
-
+        user,
+        setUser,
+        loading,
+        logOut,
     }
+    useEffect(()=>{
+        const unsubscribe=onAuthStateChanged(auth,currentUser=>{
+            setUser(currentUser);
+            setLoading(false);
+        })
+        return ()=>{
+            unsubscribe();
+        }
+    },[])
     return (
         <authContext.Provider value={authInfo}>
             {children}

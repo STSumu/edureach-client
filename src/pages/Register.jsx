@@ -5,8 +5,7 @@ import { authContext } from "../context/AuthProvider";
 import Swal from 'sweetalert2'
 
 const Register = () => {
-  const { googlelogin, baseUrl, emailSignup } = useContext(authContext);
-
+  const { googlelogin, baseUrl, emailSignup,setUser } = useContext(authContext);
   const handleRegister = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -19,7 +18,7 @@ const Register = () => {
         const reg_date = result.user.metadata.creationTime;
         const lastLogin = result.user.metadata.lastSignInTime;
         const user = { name, email, profilePic, reg_date, lastLogin, role };
-        console.log(baseUrl);
+        setUser(result.user);
         fetch(`${baseUrl}/user`, {
           method: "POST",
           headers: {
@@ -47,6 +46,7 @@ const Register = () => {
   const handleGoogleLogin = (role) => {
     googlelogin()
       .then((result) => {
+        setUser(result.user);
         const name = result.user.displayName;
         const email = result.user.email;
         const profilePic = result.user.photoURL;
