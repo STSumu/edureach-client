@@ -2,7 +2,7 @@ import React from "react";
 
 const Rating = ({ rating }) => {
   return (
-    <div className="rating rating-xs rating-half">
+    <div className="rating rating-xs rating-half flex items-center">
       <input type="radio" name="rating-fixed" className="rating-hidden" />
       {Array.from({ length: 10 }, (_, i) => {
         const half = (i + 1) * 0.5;

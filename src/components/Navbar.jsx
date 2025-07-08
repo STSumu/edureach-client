@@ -167,7 +167,7 @@ const Navbar = () => {
         ) : (
           <Link
             to="/auth/login"
-            className="btn bg-[#A75A44] hidden md:flex text-bold text-white text-lg rounded-lg "
+            className="btn bg-[#B14E0F] hidden md:flex text-bold text-white text-lg rounded-lg "
           >
             Login
           </Link>
