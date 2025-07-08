@@ -7,7 +7,7 @@ const BlueBox = () => {
   const {baseUrl}=useContext(authContext);
 
   useEffect(() => {
-    fetch(`${baseUrl}/users`)
+    fetch(`${baseUrl}/user`)
       .then(res => res.json())
       .then(data => {
         setUsers(data);

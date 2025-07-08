@@ -1,31 +1,73 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaArrowLeft, FaShoppingCart } from "react-icons/fa";
-import { Link, useLoaderData, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
 import Rating from "./Rating";
 import { MdUpdate } from "react-icons/md";
-
+import { IoIosPhonePortrait } from "react-icons/io";
+import { CiTrophy } from "react-icons/ci";
+import { GiDuration } from "react-icons/gi";
+import Loading from "./Loading";
+import CourseContent from "./CourseContent";
+import Swal from "sweetalert2";
 
 const CourseDetails = () => {
-  const { baseUrl } = useContext(authContext);
+  const { baseUrl, dbUser, loading } = useContext(authContext);
   const params = useParams();
+  const [materials, setMaterials] = useState([]);
   const course = useContext(authContext).courses.find((course) => course.course_name === params.course_name);
+  useEffect(() => {
+    fetch(`${baseUrl}/materials/${course_name}`)
+      .then(res => res.json())
+      .then(data => setMaterials(data));
+  }, [])
+
+  if (!course) {
+    if (loading)
+      return <Loading></Loading>;
+  }
   const { course_name, course_id, category, status, instructor, duration, price, updated_at, thumb_url, instructorImg, description, rating, totalstudent } = course;
   const date = new Date(updated_at);
-  const month = date.getMonth() + 1; // getMonth() is 0-indexed
+  const month = date.getMonth() + 1;
   const year = date.getFullYear();
+
   const handleAddCart = () => {
-    fetch(`${baseUrl}/cart/${course_name}`, {
+    const userId = dbUser.user_id;
+    console.log(dbUser);
+    const cartItem = {
+      course_id,
+      userId,
+    }
+    console.log("BASE URL:", baseUrl); // Should be http://localhost:4000
+    console.log("Cart item:", cartItem);
+
+    fetch(`${baseUrl}/cart`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify(course_id),
+      body: JSON.stringify(cartItem),
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.insertedId) {
-          alert('success')
+        if (data.cart_id) {
+          Swal.fire({
+            title: 'Added to Cart!',
+            text: 'Do you want to go to your cart now?',
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonText: 'Go to Cart',
+            cancelButtonText: 'Stay here',
+          })
+          .then((result) => {
+    if (result.isConfirmed) {
+      
+      window.location.href = '/cart';
+    }
+  });
+        }
+        else {
+          alert('failed');
         }
       });
   }
@@ -44,6 +86,7 @@ const CourseDetails = () => {
         }
       });
   }
+
   return (
     <div className="mt-15 md:mt-10">
       <div className="p-4 md:p-10 md:px-25 bg-[#471608] text-white flex justify-center flex-col md:mb-20">
@@ -85,8 +128,17 @@ const CourseDetails = () => {
         </div>
       </div>
       <div className="container mx-auto px-4 md:px-10 lg:px-25">
-        <h3 className="font-bold text-3xl">This Course includes:</h3>
-
+        <h3 className="font-bold text-3xl pb-4">This Course includes:</h3>
+        <ul className="*:text-sm space-y-2">
+          <li ><GiDuration className="pr-2 inline w-6 h-6" />{duration} long teaching session</li>
+          <li ><IoIosPhonePortrait className="inline pr-2 w-6 h-6" />Access on mobile and TV</li>
+          <li ><CiTrophy className="inline pr-2 w-6 h-6" />Certificate of completion</li>
+        </ul>
+      </div>
+      <div>
+        {
+          materials.map((material, idx) => <CourseContent material={material} key={idx}></CourseContent>)
+        }
       </div>
     </div>
   );

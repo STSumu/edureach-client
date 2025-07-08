@@ -2,11 +2,21 @@ import logo from "../assets/logo.png";
 import { Link, NavLink } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { authContext } from "../context/AuthProvider";
 import Swal from "sweetalert2";
 
 const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   const links = (
     <>
       <li>
@@ -45,7 +55,7 @@ const Navbar = () => {
   
 
   return (
-    <div className="navbar bg-transparent px-2 md:px-8 lg:px-25 shadow-sm fixed">
+    <div className={`navbar z-10 ${scrolled ? 'bg-[#A75A44] text-white': 'bg-transparent'} px-2 md:px-8 lg:px-25 shadow-sm fixed`}>
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -80,7 +90,7 @@ const Navbar = () => {
               EduReach
             </a>
           </div>
-          <span className="text-xs md:text-sm text-gray-500 italic pl-4 ml-[28px] mt-[-17px]">
+          <span className={`text-xs md:text-sm ${scrolled ? 'text-white' : 'text-gray-500'} italic pl-4 ml-[28px] mt-[-17px]`}>
             E-Learning System
           </span>
         </div>
@@ -133,7 +143,7 @@ const Navbar = () => {
           <FaShoppingCart />
         </button>
         {user ? (
-          <div className="dropdown dropdown-end">
+          <div className="dropdown dropdown-end text-black">
             <div tabIndex={0} role="button" className="text-2xl text-gray-600 hover:text-black transition duration-200">
           <FaUserCircle />
             </div>
@@ -154,7 +164,7 @@ const Navbar = () => {
                 <Link>My Courses</Link>
               </li>
               <li>
-                <Link>My Cart</Link>
+                <Link to='/cart'>My Cart</Link>
               </li>
               <li className=" border-b-1 border-gray-300">
                 <Link>My WishList</Link>
