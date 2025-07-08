@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { FaArrowLeft, FaStar } from "react-icons/fa";
 import { Link, useLoaderData, useParams } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
+import Rating from "./Rating";
 
 const CourseDetails = () => {
   const params=useParams();
@@ -24,28 +25,21 @@ const CourseDetails = () => {
                   });
     }
   return (
-    <div>
+    <div className="mt-10">
       <div className="p-4 md:p-10 md:px-25 bg-[#471608] text-white flex justify-center flex-col">
           <p>{category}</p>
           <h1 className="text-5xl font-bold">{course_name}</h1>
-          <p className="inline">{rating ? Number(rating).toFixed(1) : 'N/A'}</p>
-          <div className="inline rating rating-sm">
-  {[1, 2, 3, 4, 5].map((num) => (
-    <input
-      key={num}
-      type="radio"
-      name="rating-8"
-      className="mask mask-star-2 bg-orange-400"
-      aria-label={`${num} star`}
-      defaultChecked={num === rating} // Change `2` to your desired default
-    />
-  ))}
-</div>
-
-          <p>{totalstudent}</p>
-      <p className="py-6">
+          <p className="py-6">
         {description}
       </p>
+      {/* second section  */}
+          <div className="flex gap-2 items-center w-full lg:w-1/3">
+
+            <p className="inline">{rating ? Number(rating).toFixed(1) : 'N/A'}</p>
+            <Rating rating={rating}></Rating>
+<p>{totalstudent} Students</p>
+          </div>
+      
       </div>
       <div className="hero bg-base-200 md:min-h-screen w-full">
   <div className="hero-content flex-col lg:flex-row">

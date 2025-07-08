@@ -1,7 +1,7 @@
 @import "tailwindcss";
-@plugin "daisyui";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Finger+Paint&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+@plugin "daisyui";
 
 .roboto-font {
   font-family: "Roboto", sans-serif;

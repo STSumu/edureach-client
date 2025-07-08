@@ -35,9 +35,9 @@ const Chooseus = () => {
 
   ]
   return (
-    <div className="flex flex-col md:flex-row p-2 md:p-8 gap-10 md:gap-20 bg-gray-100 rounded-lg shadow-md ">
+    <div className="flex flex-col lg:flex-row p-2 md:p-8 gap-10 md:gap-20 bg-gray-100 rounded-lg shadow-md ">
       {/* Left: Image */}
-      <div className="flex-shrink-0 w-full md:w-1/2 ">
+      <div className="flex-shrink-0 w-full lg:w-1/2 ">
         <img 
           src={studentPic}
           alt="Why Choose Us"
