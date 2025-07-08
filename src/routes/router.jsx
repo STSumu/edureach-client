@@ -8,7 +8,7 @@ import Error from "../pages/Error";
 import AllCourse from "../pages/AllCourse";
 import CourseDetails from "../components/CourseDetails";
 import CartItem from "../components/CartItem";
-
+import CartPage from '../components/CartPage';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -46,6 +46,10 @@ export const router = createBrowserRouter([
   {
     path:'/cartitem',
     element:<CartItem></CartItem>,
+  },
+  {
+    path:'/CartPage',
+    element:<CartPage></CartPage>,
   }
 ]);
 
