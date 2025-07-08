@@ -9,6 +9,7 @@ import AllCourse from "../pages/AllCourse";
 import CourseDetails from "../components/CourseDetails";
 import CartItem from "../components/CartItem";
 import CartPage from '../components/CartPage';
+import SearchResults from "../pages/SearchResults"; // 👈 impo
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -49,7 +50,8 @@ export const router = createBrowserRouter([
   },
   {
     path:'/CartPage',
-    element:<CartPage></CartPage>,
-  }
+    element:<CartPage></CartPage>
+  },
+   { path: "/search", element: <SearchResults /> },
 ]);
 

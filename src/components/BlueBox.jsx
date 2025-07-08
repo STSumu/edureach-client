@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import CountUp from "react-countup"; // 👈 import this
+import CountUp from "react-countup";
 import { authContext } from './../context/AuthProvider';
 
 const BlueBox = () => {
