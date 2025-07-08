@@ -7,6 +7,7 @@ import AuthLayout from "../layouts/AuthLayout";
 import Error from "../pages/Error";
 import AllCourse from "../pages/AllCourse";
 import CourseDetails from "../components/CourseDetails";
+import CartItem from "../components/CartItem";
 
 export const router = createBrowserRouter([
   {
@@ -37,9 +38,14 @@ export const router = createBrowserRouter([
         element: <Login></Login>,
       },
       {
-        path: "/auth/register",
-        element: <Register></Register>,
-      },
-    ],
+        path:'/auth/register',
+        element:<Register></Register>
+      }
+    ]
   },
+  {
+    path:'/cartitem',
+    element:<CartItem></CartItem>,
+  }
 ]);
+
