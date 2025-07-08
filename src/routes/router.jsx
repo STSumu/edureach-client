@@ -7,7 +7,9 @@ import AuthLayout from "../layouts/AuthLayout";
 import Error from "../pages/Error";
 import AllCourse from "../pages/AllCourse";
 import CourseDetails from "../components/CourseDetails";
-
+import CartItem from "../components/CartItem";
+import CartPage from '../components/CartPage';
+import SearchResults from "../pages/SearchResults"; // 👈 impo
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -37,9 +39,19 @@ export const router = createBrowserRouter([
         element: <Login></Login>,
       },
       {
-        path: "/auth/register",
-        element: <Register></Register>,
-      },
-    ],
+        path:'/auth/register',
+        element:<Register></Register>
+      }
+    ]
   },
+  {
+    path:'/cartitem',
+    element:<CartItem></CartItem>,
+  },
+  {
+    path:'/CartPage',
+    element:<CartPage></CartPage>
+  },
+   { path: "/search", element: <SearchResults /> },
 ]);
+
