@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 
 const Login = () => {
   const { emaillogin ,setUser} = useContext(authContext);
+  
   const handleLogin = (e) => {
     e.preventDefault(); 
     const email = e.target.email.value;
