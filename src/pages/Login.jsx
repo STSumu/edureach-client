@@ -5,20 +5,23 @@ import { authContext } from "../context/AuthProvider";
 import Swal from "sweetalert2";
 
 const Login = () => {
-  const { emaillogin } = useContext(authContext);
+  const { emaillogin ,setUser} = useContext(authContext);
   const handleLogin = (e) => {
-    e.preventDefault(); // Add this
+    e.preventDefault(); 
     const email = e.target.email.value;
     const pass = e.target.password.value;
+    
     emaillogin(email, pass)
       .then((result) => {
+        setUser(result.user);
         const lastLogin = result.user.metadata.lastSignInTime;
         Swal.fire({
           title: "Sucess",
           icon: "success",
-          text: "User Created Successfully",
+          text: `Welcome ${result.user?.displayName || " "}`,
           draggable: true,
         });
+        e.reset();
       })
       .catch((err) => {
         alert(err.message);

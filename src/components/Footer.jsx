@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <div>
+        <div className='container px-2 md:px-25'  style={{ backgroundImage: `url(/herobg2.svg)`,backgroundPosition:'right'}}>
             <footer className="footer sm:footer-horizontal justify-center md:justify-between gap-10 bg-transparent text-base-content p-10">
   <nav>
     <h6 className="footer-title">Services</h6>
