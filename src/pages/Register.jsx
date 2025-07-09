@@ -1,24 +1,26 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
 import Swal from 'sweetalert2'
 
+
 const Register = () => {
   const { googlelogin, baseUrl, emailSignup,setUser } = useContext(authContext);
+  const navigate=useNavigate();
   const handleRegister = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const email = e.target.email.value;
     const pass = e.target.password.value;
     const role = e.target.role.value.toLowerCase();
+    
     emailSignup(email, pass)
       .then((result) => {
         const profilePic = result.user.photoURL;
         const reg_date = result.user.metadata.creationTime;
         const lastLogin = result.user.metadata.lastSignInTime;
         const user = { name, email, profilePic, reg_date, lastLogin, role };
-        setUser(result.user);
         fetch(`${baseUrl}/user`, {
           method: "POST",
           headers: {
@@ -28,16 +30,23 @@ const Register = () => {
         })
           .then((res) => res.json())
           .then((data) => {
-            if (data.insertedId) {
+            if (data.user_id) {
               Swal.fire({
                 title: "Sucess",
                 icon: "success",
-                text:"User Created Successfully",
-                draggable: true,
-              });
-              e.reset();
-            }
-          });
+                confirmButtonText: 'OK',
+          })
+          .then((result) => {
+    if (result.isConfirmed) {
+      
+      navigate('/auth/login');
+    }
+  });
+        }
+        else {
+          alert('failed');
+        }
+      });
       })
       .catch((err) => {
         alert("Error signing up", err.message);

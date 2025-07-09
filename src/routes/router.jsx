@@ -9,7 +9,7 @@ import AllCourse from "../pages/AllCourse";
 import CourseDetails from "../components/CourseDetails";
 import CartItem from "../components/CartItem";
 import PrivateRoute from "../routes/PrivateRoute"
-import SearchResults from "../pages/SearchResults"; // 👈 impo
+import SearchResults from "../pages/SearchResults"; 
 import CartPage from "../pages/CartPage";
 export const router = createBrowserRouter([
   {
@@ -31,7 +31,8 @@ export const router = createBrowserRouter([
       },
       {
     path:'/CartPage',
-    element:<PrivateRoute><CartPage></CartPage></PrivateRoute>
+    element:<PrivateRoute><CartPage></CartPage></PrivateRoute>,
+    loader:()=>fetch('')
   },
   { path: "/search", element: <SearchResults /> },
     ],

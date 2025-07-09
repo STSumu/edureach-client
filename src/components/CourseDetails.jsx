@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FaArrowLeft, FaShoppingCart } from "react-icons/fa";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
 import Rating from "./Rating";
 import { MdUpdate } from "react-icons/md";
@@ -15,6 +15,7 @@ const CourseDetails = () => {
   const { baseUrl, dbUser, loading } = useContext(authContext);
   const params = useParams();
   const [materials, setMaterials] = useState([]);
+  const navigate=useNavigate();
   const course = useContext(authContext).courses.find((course) => course.course_name === params.course_name);
   useEffect(() => {
     fetch(`${baseUrl}/materials/${course?.course_name}`)
@@ -60,7 +61,7 @@ const CourseDetails = () => {
           .then((result) => {
     if (result.isConfirmed) {
       
-      window.location.href = '/cart';
+      navigate('/cart');
     }
   });
         }
