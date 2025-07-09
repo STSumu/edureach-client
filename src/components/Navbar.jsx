@@ -21,7 +21,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   
-  const { user, logOut } = useContext(authContext);
+  const { user, logOut} = useContext(authContext);
  const [search, setSearch] = useState("");
 const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const navigate = useNavigate();
         });
       })
       .catch((err) => {
-        console.log(err);
+        alert(err);
       });
   };
 
@@ -54,7 +54,7 @@ const navigate = useNavigate();
         <NavLink to="/">Home</NavLink>
       </li>
       <li>
-        <NavLink to="/about">About</NavLink>
+        <NavLink to="/dashboard">Dashboard</NavLink>
       </li>
       <li>
         <NavLink to="/courses">Courses</NavLink>
@@ -63,7 +63,7 @@ const navigate = useNavigate();
         <NavLink to="/profile">Profile</NavLink>
       </li>
       <li>
-        <NavLink to="/auth/login">Contact</NavLink>
+        <NavLink to="/contact">Contact</NavLink>
       </li>
     </>
   );
@@ -158,7 +158,7 @@ const navigate = useNavigate();
 
         {/* Cart & User */}
         <Link
-          to="/CartPage"
+          to={`/cart`}
           className="text-gray-600 hover:text-black transition duration-200 text-2xl"
           title="Go to Cart"
         >
@@ -196,11 +196,11 @@ const navigate = useNavigate();
               </li>
               <li>
                
-                <Link to="/CartPage">My Cart</Link>
+                <Link to={`/cart`}>My Cart</Link>
 
               </li>
               <li className="border-b-1 border-gray-300">
-                <Link>My WishList</Link>
+                <Link to='/wish'>My WishList</Link>
               </li>
               <li>
                 <button onClick={handleSignOut}>Sign Out</button>

@@ -69,7 +69,6 @@ const Register = () => {
           lastLogin,
           role: role.toLowerCase(),
         };
-        console.log(baseUrl);
         fetch(`${baseUrl}/user`, {
           method: "POST",
           headers: {
