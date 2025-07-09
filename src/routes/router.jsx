@@ -9,8 +9,15 @@ import AllCourse from "../pages/AllCourse";
 import CourseDetails from "../components/CourseDetails";
 import CartItem from "../components/CartItem";
 import PrivateRoute from "../routes/PrivateRoute"
-import SearchResults from "../pages/SearchResults"; // 👈 impo
+import SearchResults from "../pages/SearchResults"; 
 import CartPage from "../pages/CartPage";
+import WishPage from "../pages/WishPage";
+import Dashboard from "../pages/Dashboard";
+import EnrolledRoute from "./EnrolledRoute";
+import EnrolledCourse from "../pages/EnrolledCourse";
+import Material from "../pages/Material";
+
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -26,12 +33,28 @@ export const router = createBrowserRouter([
         element: <AllCourse></AllCourse>,
       },
       {
-        path: "/course/:course_name",
+        path: "/courses/:course_id",
         element: <CourseDetails />,
       },
       {
-    path:'/CartPage',
-    element:<PrivateRoute><CartPage></CartPage></PrivateRoute>
+        path:'/dashboard',
+        element:<PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
+      },
+      {
+        path:'/myCourse',
+        element:<EnrolledRoute><EnrolledCourse></EnrolledCourse></EnrolledRoute>
+      },
+      {
+        path:'/content/:materialId',
+        element:<EnrolledRoute><Material></Material></EnrolledRoute>
+      },
+      {
+    path:'/cart',
+    element:<PrivateRoute><CartPage></CartPage></PrivateRoute>,
+  },
+      {
+    path:'/wish',
+    element:<PrivateRoute><WishPage></WishPage></PrivateRoute>,
   },
   { path: "/search", element: <SearchResults /> },
     ],

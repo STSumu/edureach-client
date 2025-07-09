@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FaArrowLeft, FaShoppingCart } from "react-icons/fa";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
 import Rating from "./Rating";
 import { MdUpdate } from "react-icons/md";
@@ -13,32 +13,39 @@ import Swal from "sweetalert2";
 
 const CourseDetails = () => {
   const { baseUrl, dbUser, loading } = useContext(authContext);
+  const userId = dbUser.user_id;
   const params = useParams();
   const [materials, setMaterials] = useState([]);
-  const course = useContext(authContext).courses.find((course) => course.course_name === params.course_name);
+  const [course, setCourse] = useState([]);
+  const navigate=useNavigate();
+  useEffect(()=>{
+    fetch(`${baseUrl}/courses/${params?.course_id}`)
+    .then(res => res.json())
+      .then(data => setCourse(data));
+  },[])
   useEffect(() => {
-    fetch(`${baseUrl}/materials/${course?.course_name}`)
+    fetch(`${baseUrl}/materials/${params?.course_id}`)
       .then(res => res.json())
       .then(data => setMaterials(data));
+    
   }, [])
 
-  if (loading || !course) {
+  if (loading || !course || course.length==0) {
   return <Loading />;
 }
-  const { course_name, course_id, category, status, instructor, duration, price, updated_at, thumb_url, description, rating, totalstudent } = course;
+
+  const { course_name, course_id, category, status, instructor, duration, price, updated_at, thumb_url, description, rating, totalstudent } = course[0];
   const date = new Date(updated_at);
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
+
+
   const handleAddCart = () => {
-    const userId = dbUser.user_id;
-    console.log(dbUser);
     const cartItem = {
       course_id,
       userId,
     }
-    console.log("BASE URL:", baseUrl); // Should be http://localhost:4000
-    console.log("Cart item:", cartItem);
-
+    
     fetch(`${baseUrl}/cart`, {
       method: "POST",
       headers: {
@@ -60,7 +67,7 @@ const CourseDetails = () => {
           .then((result) => {
     if (result.isConfirmed) {
       
-      window.location.href = '/cart';
+      navigate('/cart');
     }
   });
         }
@@ -70,20 +77,41 @@ const CourseDetails = () => {
       });
   }
   const handleAddWishList = () => {
-    fetch(`${baseUrl}/wish/${course_name}`, {
+    const wishItem = {
+      course_id,
+      userId,
+    }
+    fetch(`${baseUrl}/wish`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify(course_id),
+      body: JSON.stringify(wishItem),
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.insertedId) {
-          alert('success')
+        if (data.cart_id) {
+          Swal.fire({
+            title: 'Added to WishList!',
+            text: 'Do you want to go to your WishList now?',
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonText: 'Go to WishList',
+            cancelButtonText: 'Stay here',
+          })
+          .then((result) => {
+    if (result.isConfirmed) {
+      
+      navigate('/wish');
+    }
+  });
+        }
+        else {
+          alert('failed');
         }
       });
   }
+  console.log(materials);
 
   return (
     <div className="mt-15 md:mt-10">
@@ -145,7 +173,7 @@ const CourseDetails = () => {
           }
           </div>
 }
-      
+          
           
         </div>
     </div>

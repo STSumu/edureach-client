@@ -58,6 +58,7 @@ const AuthProvider = ({children}) => {
         loading,
         logOut,
         dbUser,
+        setDbUser,
     }
     useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
