@@ -8,8 +8,9 @@ import Error from "../pages/Error";
 import AllCourse from "../pages/AllCourse";
 import CourseDetails from "../components/CourseDetails";
 import CartItem from "../components/CartItem";
-import CartPage from '../components/CartPage';
+import PrivateRoute from "../routes/PrivateRoute"
 import SearchResults from "../pages/SearchResults"; // 👈 impo
+import CartPage from "../pages/CartPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +29,11 @@ export const router = createBrowserRouter([
         path: "/course/:course_name",
         element: <CourseDetails />,
       },
+      {
+    path:'/CartPage',
+    element:<PrivateRoute><CartPage></CartPage></PrivateRoute>
+  },
+  { path: "/search", element: <SearchResults /> },
     ],
   },
   {
@@ -44,14 +50,6 @@ export const router = createBrowserRouter([
       }
     ]
   },
-  {
-    path:'/cartitem',
-    element:<CartItem></CartItem>,
-  },
-  {
-    path:'/CartPage',
-    element:<CartPage></CartPage>
-  },
-   { path: "/search", element: <SearchResults /> },
+   
 ]);
 
