@@ -17,20 +17,18 @@ const CourseDetails = () => {
   const [materials, setMaterials] = useState([]);
   const course = useContext(authContext).courses.find((course) => course.course_name === params.course_name);
   useEffect(() => {
-    fetch(`${baseUrl}/materials/${course_name}`)
+    fetch(`${baseUrl}/materials/${course?.course_name}`)
       .then(res => res.json())
       .then(data => setMaterials(data));
   }, [])
 
-  if (!course) {
-    if (loading)
-      return <Loading></Loading>;
-  }
-  const { course_name, course_id, category, status, instructor, duration, price, updated_at, thumb_url, instructorImg, description, rating, totalstudent } = course;
+  if (loading || !course) {
+  return <Loading />;
+}
+  const { course_name, course_id, category, status, instructor, duration, price, updated_at, thumb_url, description, rating, totalstudent } = course;
   const date = new Date(updated_at);
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
-
   const handleAddCart = () => {
     const userId = dbUser.user_id;
     console.log(dbUser);
@@ -127,7 +125,7 @@ const CourseDetails = () => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-4 md:px-10 lg:px-25">
+      <div className="container mx-auto px-4 md:px-10 lg:px-15">
         <h3 className="font-bold text-3xl pb-4">This Course includes:</h3>
         <ul className="*:text-sm space-y-2">
           <li ><GiDuration className="pr-2 inline w-6 h-6" />{duration} long teaching session</li>
@@ -135,11 +133,21 @@ const CourseDetails = () => {
           <li ><CiTrophy className="inline pr-2 w-6 h-6" />Certificate of completion</li>
         </ul>
       </div>
-      <div>
-        {
+        <div className="container mx-auto px-4 md:px-10 lg:px-15 mt-10">
+          <h3 className="font-bold text-3xl pb-4">Course Content</h3>
+          
+           {materials.length == 0 ?
+           <div className="flex items-center"> <h1 className="text-xl font-bold text-gray-500">Upcoming</h1></div>
+           : 
+           <div className="flex flex-col">
+           {
           materials.map((material, idx) => <CourseContent material={material} key={idx}></CourseContent>)
-        }
-      </div>
+          }
+          </div>
+}
+      
+          
+        </div>
     </div>
   );
 };
