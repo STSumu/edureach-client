@@ -25,6 +25,20 @@ const CartPage = () => {
         })
   }, []);
 
+<<<<<<< HEAD
+  const handleWishlist = (id) => {
+    console.log('Move to Wishlist', id);
+    // TODO: Wishlist logic
+  };
+
+  const handleAddOrder=(success)=>{
+        if(success==-1){
+           console.log('add order');
+        }
+        else if(success ==1){
+           console.log('not order')
+        }
+=======
   const handleRemove=(userId,courseId)=>{
     handleCartRemove(userId,courseId);
     const newCart=cart.filter((cartitem)=>cartitem.course_id !== courseId);
@@ -37,6 +51,7 @@ setTotal(newTotal);
   }
   const handleAddOrder=(status)=>{
     console.log(status);
+>>>>>>> a5cc4a51c5526f4ee26874b96e5c1beb1bdd7b92
   }
 
   return (
