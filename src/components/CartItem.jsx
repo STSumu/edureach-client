@@ -1,84 +1,57 @@
-import React, { useContext } from "react";
-import { FiTrash, FiHeart } from "react-icons/fi";
-import { authContext } from "../context/AuthProvider";
-import Loading from "./Loading";
-import useAddtoList from "../functions/addToList";
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { FaShoppingCart } from 'react-icons/fa';
 
-const CartItem = ({ courseId,handleRemove }) => {
-  const {handleAddWishList}=useAddtoList();
-  const {courses,dbUser}=useContext(authContext);
-  const course=courses.find((course)=> course.course_id=== courseId);
-  const userId=dbUser.user_id;
-  const wishItem={
-    course_id:courseId,
-    userId,
-  }
-  const {course_name,rating,duration,level,price,discount,thumb_url}=course;
-  const discountPrice=price-price*discount;
+const OrderPage = () => {
+  const location = useLocation();
+  const { cart, total } = location.state || { cart: [], total: 0 };
+
   return (
-    <div className="glass p-4 rounded-xl shadow-md bg-white mb-4 flex flex-col md:flex-row gap-4">
-      {/* Course Image */}
-      <div className="w-full md:w-40 h-28 flex-shrink-0">
-        <img
-          src={thumb_url}
-          alt={course_name}
-          className="w-full h-full object-cover rounded-lg"
-        />
-      </div>
-
-      {/* Course Details */}
-      <div className="flex flex-col justify-between flex-1">
+    <div className="bg-gray-100 min-h-screen py-10 px-4 md:px-10">
+      <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+        {/* Left: User Info Placeholder */}
         <div>
-          <h3 className="text-lg md:text-xl font-semibold text-gray-800">
-            {course_name}
-          </h3>
-          <p className="text-sm text-gray-500">By {course.instructor}</p>
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+            <FaShoppingCart className="text-blue-600" />
+            Checkout
+          </h2>
 
-          <div className="flex items-center gap-2 mt-1 text-sm">
-            <span className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">
-              Bestseller
-            </span>
-            <span className="text-yellow-600 font-bold">{rating ? Number(rating).toFixed(1) : 'N/A'}</span>
-            <span className="text-gray-500">
-              ({course.totalRatings} ratings)
-            </span>
+          {/* You can add user info/billing here later */}
+          <p className="text-sm text-gray-500">Please confirm your order.</p>
+        </div>
+
+        {/* Right: Order Summary */}
+        <div className="space-y-6">
+          <div className="border rounded p-4">
+            <h3 className="text-lg font-semibold mb-4">Your Order</h3>
+            {cart.map((item, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center mb-3"
+              >
+                <div>
+                  <p className="font-medium">{item.course_name}</p>
+                  <p className="text-sm text-gray-500">
+                    Instructor: {item.instructor}
+                  </p>
+                </div>
+                <p className="font-bold text-purple-700">${item.price}</p>
+              </div>
+            ))}
+            <hr className="my-2" />
+            <div className="flex justify-between text-sm font-semibold">
+              <p>Total</p>
+              <p>${total}</p>
+            </div>
           </div>
 
-          <p className="text-sm text-gray-600 mt-1">
-            {duration} hours • {course.lectures} lectures •{" "}
-            {level}
-          </p>
-        </div>
-
-        {/* Wishlist / Save Buttons */}
-        
-      </div>
-
-      {/* Price and Remove button on the right */}
-      <div className="flex flex-col items-end justify-between">
-        <div className="text-right">
-          
-          <p className="text-xl font-bold text-purple-700">
-            ${discount ? discountPrice : price}
-          </p>
-          {discount && <p className="text-sm text-gray-400 line-through">
-            ${price}
-          </p>}
-        </div>
-        <div className="flex items-center justify-between gap-3 pb-3 *:w-4 *:h-4">
-        <button
-          onClick={() => handleAddWishList(wishItem)}
-        >
-          <FiHeart className="w-full"/> 
-        </button>
-        <button
-          onClick={() => handleRemove(userId,courseId)}
-        >
-          <FiTrash className="w-full text-red-600 hover:text-red-900"/> 
-        </button>
+          <button className="w-full bg-blue-600 text-white py-3 rounded font-semibold hover:bg-blue-700 transition">
+            Process to Payment →
+          </button>
         </div>
       </div>
     </div>
   );
 };
-export default CartItem;
+
+export default OrderPage;

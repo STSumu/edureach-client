@@ -16,6 +16,7 @@ import Dashboard from "../pages/Dashboard";
 import EnrolledRoute from "./EnrolledRoute";
 import EnrolledCourse from "../pages/EnrolledCourse";
 import Material from "../pages/Material";
+import OrderPage from "../pages/OrderPage";
 
 
 export const router = createBrowserRouter([
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
       {
     path:'/cart',
     element:<PrivateRoute><CartPage></CartPage></PrivateRoute>,
+  },
+  {
+    path:'/order',
+    element:<OrderPage></OrderPage>,
   },
       {
     path:'/wish',
