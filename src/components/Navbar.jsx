@@ -62,17 +62,14 @@ const navigate = useNavigate();
       <li>
         <NavLink to="/profile">Profile</NavLink>
       </li>
-      <li>
-        <NavLink to="/contact">Contact</NavLink>
-      </li>
     </>
   );
 
   return (
-    <div className={`navbar z-10 ${scrolled ? 'bg-[#A75A44] text-white': 'bg-transparent'} px-2 md:px-8 lg:px-25 shadow-sm fixed`}>
+    <div className={`navbar z-10 ${scrolled ? 'bg-[#A75A44]': 'bg-transparent'} px-2 md:px-8 lg:px-25 shadow-sm fixed`}>
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden text-black">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -114,10 +111,10 @@ const navigate = useNavigate();
       </div>
 
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1 space-x-4">{links}</ul>
+        <ul className={`menu menu-horizontal ${scrolled && 'text-white'} px-1 space-x-4`}>{links}</ul>
       </div>
 
-      <div className="navbar-end flex items-center ml-auto space-x-4 pr-4">
+      <div className="navbar-end flex items-center ml-auto space-x-4 pr-4 text-black">
         {/* ✅ SEARCH BAR */}
        <form onSubmit={handleSearch} className="relative hidden md:flex">
   <label className="input">

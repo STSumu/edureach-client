@@ -9,7 +9,7 @@ import { CiTrophy } from "react-icons/ci";
 import { GiDuration } from "react-icons/gi";
 import Loading from "./Loading";
 import CourseContent from "./CourseContent";
-import Swal from "sweetalert2";
+import useAddtoList from "../functions/addToList";
 
 const CourseDetails = () => {
   const { baseUrl, dbUser, loading } = useContext(authContext);
@@ -17,7 +17,10 @@ const CourseDetails = () => {
   const params = useParams();
   const [materials, setMaterials] = useState([]);
   const [course, setCourse] = useState([]);
-  const navigate=useNavigate();
+
+  const {handleAddCart,handleAddWishList}=useAddtoList();
+
+
   useEffect(()=>{
     fetch(`${baseUrl}/courses/${params?.course_id}`)
     .then(res => res.json())
@@ -38,80 +41,14 @@ const CourseDetails = () => {
   const date = new Date(updated_at);
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
-
-
-  const handleAddCart = () => {
-    const cartItem = {
+  const cartItem = {
       course_id,
       userId,
     }
-    
-    fetch(`${baseUrl}/cart`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(cartItem),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.cart_id) {
-          Swal.fire({
-            title: 'Added to Cart!',
-            text: 'Do you want to go to your cart now?',
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonText: 'Go to Cart',
-            cancelButtonText: 'Stay here',
-          })
-          .then((result) => {
-    if (result.isConfirmed) {
-      
-      navigate('/cart');
-    }
-  });
-        }
-        else {
-          alert('failed');
-        }
-      });
-  }
-  const handleAddWishList = () => {
-    const wishItem = {
-      course_id,
-      userId,
-    }
-    fetch(`${baseUrl}/wish`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(wishItem),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.cart_id) {
-          Swal.fire({
-            title: 'Added to WishList!',
-            text: 'Do you want to go to your WishList now?',
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonText: 'Go to WishList',
-            cancelButtonText: 'Stay here',
-          })
-          .then((result) => {
-    if (result.isConfirmed) {
-      
-      navigate('/wish');
-    }
-  });
-        }
-        else {
-          alert('failed');
-        }
-      });
-  }
-  console.log(materials);
+
+  
+  
+
 
   return (
     <div className="mt-15 md:mt-10">
@@ -148,8 +85,8 @@ const CourseDetails = () => {
           </h2>
 
           <div className="card-actions flex flex-col">
-            <button className="btn text-white bg-[#B14E0F] w-full" onClick={handleAddCart}><FaShoppingCart />Add to Cart</button>
-            <button className="btn text-black border-[#B14E0F] w-full" onClick={handleAddWishList}>Add to WishList</button>
+            <button className="btn text-white bg-[#B14E0F] w-full" onClick={()=>{handleAddCart(cartItem)}}><FaShoppingCart />Add to Cart</button>
+            <button className="btn text-black border-[#B14E0F] w-full" onClick={()=>handleAddWishList(cartItem)}>Add to WishList</button>
           </div>
         </div>
       </div>

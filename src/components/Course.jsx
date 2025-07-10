@@ -8,13 +8,13 @@ const Course = ({course}) => {
     
     return (
         <Link to={`/courses/${Number(course_id)}`} className='h-full w-full'>
-        <div className="h-full card bg-[#EEBF9F]/10 md:p-6 rounded-2xl shadow-xl overflow-hidden p-4 max-w-sm flex flex-col justify-between">
-  <figure className='h-1/2 rounded-xl'>
-    <img className='w-full object-cover rounded-xl'
+        <div className="card bg-[#EEBF9F]/10 rounded-2xl shadow-xl overflow-hidden p-4 max-w-sm flex flex-col justify-between h-[400px]">
+  <figure className='flex-1 rounded-xl'>
+    <img className='w-full h-full object-cover rounded-xl'
       src={thumb_url}
       alt={course_name} />
   </figure>
-  <div >
+  <div className='flex-1'>
     <p className='uppercase text-xs mt-4 tracking-widest'>{category}</p>
     <div className='flex items-center gap-4 pb-3 justify-between mt-1'>
       <h2 className="text-lg font-semibold leading-snug ">

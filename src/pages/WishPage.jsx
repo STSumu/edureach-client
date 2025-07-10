@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { authContext } from '../context/AuthProvider';
 import { Link } from 'react-router-dom';
 import WishItem from '../components/WishItem';
+import useAddtoList from '../functions/addToList';
 
 const WishPage = () => {
     const [wish,setWish]=useState([]);
   const {dbUser}=useContext(authContext);
-
+ const {handleWishRemove}=useAddtoList();
   useEffect(() => {
       fetch(`http://localhost:4000/wish/${dbUser.user_id}`)
         .then((res) => res.json())
@@ -14,17 +15,14 @@ const WishPage = () => {
           setWish(data);
         });   
   }, []);
-  
 
-  const handleRemove = (id) => {
-    console.log('Remove', id);
-    // TODO: Remove logic
+  const handleRemove = (crsId) => {
+        handleWishRemove(dbUser.user_id,crsId);
+        const newWish=wish.filter((wishitem)=>wishitem.course_id !== crsId);
+    setWish(newWish);
   };
 
-  const handleWishlist = (id) => {
-    console.log('Move to Wishlist', id);
-    // TODO: Wishlist logic
-  };
+
 
   return (
     <div className="max-w-4xl mx-auto p-4 mt-20">
@@ -36,10 +34,9 @@ const WishPage = () => {
             <Link className='btn' to='/'>Back to Home</Link>
           </div>
           :
-          wish.map((cartItem,idx)=><WishItem
-        courseId={cartItem.course_id} key={idx}
+          wish.map((wishItem,idx)=><WishItem
+        wishitem={wishItem} key={idx}
         handleRemove={handleRemove}
-        handleWishList={handleWishlist}
       />)
         }
       </div>

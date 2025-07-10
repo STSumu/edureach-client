@@ -2,12 +2,17 @@ import React, { useContext } from "react";
 import { FiTrash, FiHeart } from "react-icons/fi";
 import { authContext } from "../context/AuthProvider";
 import Loading from "./Loading";
+import useAddtoList from "../functions/addToList";
 
-const CartItem = ({ courseId,handleWishList,handleRemove }) => {
- 
-  const {courses}=useContext(authContext);
+const CartItem = ({ courseId,handleRemove }) => {
+  const {handleAddWishList}=useAddtoList();
+  const {courses,dbUser}=useContext(authContext);
   const course=courses.find((course)=> course.course_id=== courseId);
- 
+  const userId=dbUser.user_id;
+  const wishItem={
+    course_id:courseId,
+    userId,
+  }
   const {course_name,rating,duration,level,price,discount,thumb_url}=course;
   const discountPrice=price-price*discount;
   return (
@@ -62,12 +67,12 @@ const CartItem = ({ courseId,handleWishList,handleRemove }) => {
         </div>
         <div className="flex items-center justify-between gap-3 pb-3 *:w-4 *:h-4">
         <button
-          onClick={() => handleWishList(course.course_id)}
+          onClick={() => handleAddWishList(wishItem)}
         >
           <FiHeart className="w-full"/> 
         </button>
         <button
-          onClick={() => handleRemove(course.course_id)}
+          onClick={() => handleRemove(userId,courseId)}
         >
           <FiTrash className="w-full text-red-600 hover:text-red-900"/> 
         </button>

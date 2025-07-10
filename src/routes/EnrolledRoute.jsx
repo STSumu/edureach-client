@@ -1,4 +1,8 @@
 import React from 'react';
+import { useContext } from 'react';
+import { useLocation } from 'react-router-dom';
+import { authContext } from '../context/AuthProvider';
+import Loading from '../components/Loading';
 
 const EnrolledRoute = ({children}) => {
     const {user,loading,dbUser}=useContext(authContext);

@@ -1,27 +1,31 @@
 import React, { useContext, useEffect, useState } from 'react';
 import CartItem from '../components/CartItem';
 import { authContext } from '../context/AuthProvider';
+import useAddtoList from '../functions/addToList';
+import { FaArrowRight } from 'react-icons/fa';
+
 
 const CartPage = () => {
   const [cart,setCart]=useState([]);
   const {dbUser}=useContext(authContext);
   const [total,setTotal]=useState(0);
+  const {handleCartRemove}=useAddtoList();
   useEffect(() => {
       fetch(`http://localhost:4000/cart/${dbUser.user_id}`)
         .then((res) => res.json())
         .then((data) => {
           setCart(data);
-          let t=0;
-          data.map((item)=>t+=Number(item.price));
-          setTotal(t);
         });   
   }, []);
-  
-  const handleRemove = (id) => {
-    console.log('Remove', id);
-    // TODO: Remove logic
-  };
+  useEffect(() => {
+      fetch(`http://localhost:4000/cart/total/${dbUser.user_id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setTotal(data[0].total);
+        })
+  }, []);
 
+<<<<<<< HEAD
   const handleWishlist = (id) => {
     console.log('Move to Wishlist', id);
     // TODO: Wishlist logic
@@ -34,6 +38,20 @@ const CartPage = () => {
         else if(success ==1){
            console.log('not order')
         }
+=======
+  const handleRemove=(userId,courseId)=>{
+    handleCartRemove(userId,courseId);
+    const newCart=cart.filter((cartitem)=>cartitem.course_id !== courseId);
+    setCart(newCart);
+    let newTotal = 0;
+newCart.forEach((item) => {
+  newTotal += Number(item.price);
+});
+setTotal(newTotal);
+  }
+  const handleAddOrder=(status)=>{
+    console.log(status);
+>>>>>>> a5cc4a51c5526f4ee26874b96e5c1beb1bdd7b92
   }
 
   return (
@@ -42,38 +60,29 @@ const CartPage = () => {
       <div>
         {
           cart.map((cartItem,idx)=><CartItem
-        courseId={cartItem.course_id} key={idx}
-        handleRemove={handleRemove}
-        handleWishList={handleWishlist}
+        courseId={cartItem.course_id} handleRemove={handleRemove} key={idx}
+        
       />)
         }
       </div>
-      <div>
-        <div>
-          <h3>Cart Total</h3>
+      <div className='flex flex-col px-2'>
+        <div className='flex justify-between items-center py-5 border-b border-gray-400'>
+          <h3 className='font-bold text-gray-800'>Cart Total :</h3>
           <p>
             ${total}
           </p>
         </div>
-        <button
-            to="/auth/login"
-            className="btn bg-[#B14E0F] hidden md:flex text-white text-lg rounded-lg" onClick={()=>document.getElementById('my_modal_5').showModal()}
+        <div className="flex justify-end pt-5">
+          <button
+            className="btn bg-[#B14E0F] md:flex text-white text-sm font-semibold rounded-lg" onClick={handleAddOrder}
           >
-            Buy
+            Proceed to Checkout <FaArrowRight></FaArrowRight>
           </button>
+          
+          </div>
+          <p className='text-xs text-right text-black/70 pt-1'>You won't be charged yet.</p>
       </div>
-<dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-  <div className="modal-box">
-    <h3 className="font-bold text-lg">Hello!</h3>
-    <p className="py-4">Press ESC key or click the button below to close</p>
-    <div className="modal-action">
-      <form method="dialog">
-        <button className="btn" onClick={()=>handleAddOrder(1)}>Close</button>
-        <button className='btn' onClick={()=>handleAddOrder(-1)}>Buy</button>
-      </form>
-    </div>
-  </div>
-</dialog>
+
     </div>
   );
 };
