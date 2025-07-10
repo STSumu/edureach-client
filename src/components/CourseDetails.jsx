@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FaArrowLeft, FaShoppingCart } from "react-icons/fa";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
 import Rating from "./Rating";
 import { MdUpdate } from "react-icons/md";
@@ -13,34 +13,39 @@ import Swal from "sweetalert2";
 
 const CourseDetails = () => {
   const { baseUrl, dbUser, loading } = useContext(authContext);
+  const userId = dbUser.user_id;
   const params = useParams();
   const [materials, setMaterials] = useState([]);
-  const course = useContext(authContext).courses.find((course) => course.course_name === params.course_name);
+  const [course, setCourse] = useState([]);
+  const navigate=useNavigate();
+  useEffect(()=>{
+    fetch(`${baseUrl}/courses/${params?.course_id}`)
+    .then(res => res.json())
+      .then(data => setCourse(data));
+  },[])
   useEffect(() => {
-    fetch(`${baseUrl}/materials/${course_name}`)
+    fetch(`${baseUrl}/materials/${params?.course_id}`)
       .then(res => res.json())
       .then(data => setMaterials(data));
+    
   }, [])
 
-  if (!course) {
-    if (loading)
-      return <Loading></Loading>;
-  }
-  const { course_name, course_id, category, status, instructor, duration, price, updated_at, thumb_url, instructorImg, description, rating, totalstudent } = course;
+  if (loading || !course || course.length==0) {
+  return <Loading />;
+}
+
+  const { course_name, course_id, category, status, instructor, duration, price, updated_at, thumb_url, description, rating, totalstudent } = course[0];
   const date = new Date(updated_at);
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
 
+
   const handleAddCart = () => {
-    const userId = dbUser.user_id;
-    console.log(dbUser);
     const cartItem = {
       course_id,
       userId,
     }
-    console.log("BASE URL:", baseUrl); // Should be http://localhost:4000
-    console.log("Cart item:", cartItem);
-
+    
     fetch(`${baseUrl}/cart`, {
       method: "POST",
       headers: {
@@ -62,7 +67,7 @@ const CourseDetails = () => {
           .then((result) => {
     if (result.isConfirmed) {
       
-      window.location.href = '/cart';
+      navigate('/cart');
     }
   });
         }
@@ -72,20 +77,41 @@ const CourseDetails = () => {
       });
   }
   const handleAddWishList = () => {
-    fetch(`${baseUrl}/wish/${course_name}`, {
+    const wishItem = {
+      course_id,
+      userId,
+    }
+    fetch(`${baseUrl}/wish`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify(course_id),
+      body: JSON.stringify(wishItem),
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.insertedId) {
-          alert('success')
+        if (data.cart_id) {
+          Swal.fire({
+            title: 'Added to WishList!',
+            text: 'Do you want to go to your WishList now?',
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonText: 'Go to WishList',
+            cancelButtonText: 'Stay here',
+          })
+          .then((result) => {
+    if (result.isConfirmed) {
+      
+      navigate('/wish');
+    }
+  });
+        }
+        else {
+          alert('failed');
         }
       });
   }
+  console.log(materials);
 
   return (
     <div className="mt-15 md:mt-10">
@@ -127,7 +153,7 @@ const CourseDetails = () => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-4 md:px-10 lg:px-25">
+      <div className="container mx-auto px-4 md:px-10 lg:px-15">
         <h3 className="font-bold text-3xl pb-4">This Course includes:</h3>
         <ul className="*:text-sm space-y-2">
           <li ><GiDuration className="pr-2 inline w-6 h-6" />{duration} long teaching session</li>
@@ -135,11 +161,21 @@ const CourseDetails = () => {
           <li ><CiTrophy className="inline pr-2 w-6 h-6" />Certificate of completion</li>
         </ul>
       </div>
-      <div>
-        {
+        <div className="container mx-auto px-4 md:px-10 lg:px-15 mt-10">
+          <h3 className="font-bold text-3xl pb-4">Course Content</h3>
+          
+           {materials.length == 0 ?
+           <div className="flex items-center"> <h1 className="text-xl font-bold text-gray-500">Upcoming</h1></div>
+           : 
+           <div className="flex flex-col">
+           {
           materials.map((material, idx) => <CourseContent material={material} key={idx}></CourseContent>)
-        }
-      </div>
+          }
+          </div>
+}
+          
+          
+        </div>
     </div>
   );
 };
