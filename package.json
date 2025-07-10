@@ -26,6 +26,7 @@
     "react-tabs": "^6.1.0",
     "sort-by": "^1.2.0",
     "sweetalert2": "^11.22.1",
+    "swiper": "^11.2.10",
     "tailwindcss": "^4.1.7",
     "three": "^0.177.0"
   },

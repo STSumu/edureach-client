@@ -12,7 +12,7 @@ const HomeLayout = () => {
            {/* banner */}
            <Banner></Banner>
         </header>
-        <main className='bg-[#F2EEEC] text-black py-4 md:py-8 md:min-h-screen'>
+        <main className=' text-black py-4 md:py-8 md:min-h-screen'>
            <Outlet></Outlet>
         </main>
         <footer className='bg-[#F2EEEC]'> 

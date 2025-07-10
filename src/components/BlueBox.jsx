@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import CountUp from "react-countup";
 import { authContext } from './../context/AuthProvider';
+import Loading from "./Loading";
 
 const BlueBox = () => {
   const [users, setUsers] = useState([]);
@@ -14,7 +15,9 @@ const BlueBox = () => {
       })
       .catch(err => console.error("Error fetching users:", err));
   }, []);
-
+  if(users.length ==0){
+     <Loading></Loading>
+  }
   const total = users.length;
   const teachers = users.filter(u => u.role === "teacher").length;
   const students = users.filter(u => u.role === "student").length;
