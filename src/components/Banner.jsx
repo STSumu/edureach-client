@@ -6,7 +6,7 @@ const Banner = () => {
   const display=location?.pathname === '/' ? ' flex flex-col lg:flex-row ' : 'hidden';
   return (
     <div className={`hero w-full lg:min-h-screen container mx-auto lg:justify-between px-5 md:px-6 ${display}`}>
-  <div className="flex-col w-full lg:w-1/2 pt-15  md:pt-20 lg:pt-0 pl-2 lg:pl-20">
+  <div className="flex-col w-full lg:w-1/2 pt-30  md:pt-40 lg:pt-0 pl-2 lg:pl-20">
     
       <h1 className="text-3xl md:text-5xl font-bold libre-baskerville">Big dreams start with <br></br> small steps.<br></br> Start learning now</h1>
       <p className="py-6 font-semibold">

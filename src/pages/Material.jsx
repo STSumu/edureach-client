@@ -8,7 +8,6 @@ const Material = () => {
     const {baseUrl}=useContext(authContext);
     const[material,setMaterial]=useState();
     const params=useParams();
-    console.log(params.materialId);
     useEffect(() => {
         fetch(`${baseUrl}/materials/mat/${params?.materialId}`)
           .then(res => res.json())
@@ -16,7 +15,7 @@ const Material = () => {
         
       }, [])
       if (!material) return <Loading></Loading>;
-      const {url,title,course_id}=material[0];
+      const {url,title}=material[0];
       const getEmbedUrl = (url) => {
     if (!url) return "";
 
