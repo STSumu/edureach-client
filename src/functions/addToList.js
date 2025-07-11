@@ -5,7 +5,7 @@ import { authContext } from "../context/AuthProvider";
 import Swal from "sweetalert2";
 
 const useAddtoList = () => {
-  const { baseUrl } = useContext(authContext);
+  const { baseUrl} = useContext(authContext);
   const navigate = useNavigate();
 
   const handleAddCart = (cartItem) => {
@@ -101,6 +101,7 @@ const useAddtoList = () => {
   });
 
   }
+ 
 
   return {handleAddCart,handleAddWishList,handleCartRemove,handleWishRemove};
 };
