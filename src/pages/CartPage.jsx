@@ -3,22 +3,24 @@ import CartItem from '../components/CartItem';
 import { authContext } from '../context/AuthProvider';
 import useAddtoList from '../functions/addToList';
 import { FaArrowRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 
 const CartPage = () => {
   const [cart,setCart]=useState([]);
-  const {dbUser}=useContext(authContext);
+  const {dbUser,baseUrl}=useContext(authContext);
   const [total,setTotal]=useState(0);
   const {handleCartRemove}=useAddtoList();
+  const navigate=useNavigate();
   useEffect(() => {
-      fetch(`http://localhost:4000/cart/${dbUser.user_id}`)
+      fetch(`${baseUrl}/cart/${dbUser.user_id}`)
         .then((res) => res.json())
         .then((data) => {
           setCart(data);
         });   
   }, []);
   useEffect(() => {
-      fetch(`http://localhost:4000/cart/total/${dbUser.user_id}`)
+      fetch(`${baseUrl}/cart/total/${dbUser.user_id}`)
         .then((res) => res.json())
         .then((data) => {
           setTotal(data[0].total);
@@ -35,9 +37,36 @@ newCart.forEach((item) => {
 });
 setTotal(newTotal);
   }
-  const handleAddOrder=(status)=>{
-    console.log(status);
+  const handleAddOrder = async () => {
+   try {
+    const orderItems = cart.map((cartitem) => ({
+      courseId: cartitem.course_id,
+    }));
+
+    const res = await fetch(`${baseUrl}/order/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: dbUser.user_id,
+        courses: orderItems,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.order_id) {
+      navigate('/order');
+    } else {
+      console.error('Order creation failed:', data);
+    }
+  } catch (err) {
+    console.error('Order error:', err);
   }
+
+};
+
 
   return (
     <div className="max-w-4xl mx-auto p-4 mt-20">

@@ -17,6 +17,7 @@ import EnrolledRoute from "./EnrolledRoute";
 import EnrolledCourse from "../pages/EnrolledCourse";
 import Material from "../pages/Material";
 import OrderPage from "../pages/OrderPage";
+import Payment from "../pages/Payment";
 
 
 export const router = createBrowserRouter([
@@ -60,6 +61,9 @@ export const router = createBrowserRouter([
       {
     path:'/wish',
     element:<PrivateRoute><WishPage></WishPage></PrivateRoute>,
+  },{
+    path:'/pay',
+    element:<PrivateRoute><Payment></Payment></PrivateRoute>
   },
   { path: "/search", element: <SearchResults /> },
     ],

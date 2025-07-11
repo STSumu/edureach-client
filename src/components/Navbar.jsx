@@ -156,7 +156,7 @@ const navigate = useNavigate();
         {/* Cart & User */}
         <Link
           to={`/cart`}
-          className="text-gray-600 hover:text-black transition duration-200 text-2xl"
+          className="text-gray-600 hover:text-black transition duration-200 text-2xl hidden md:flex"
           title="Go to Cart"
         >
           <FaShoppingCart />

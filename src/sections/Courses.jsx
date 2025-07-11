@@ -30,8 +30,8 @@ const Courses = () => {
                     delay: 3000,
                     disableOnInteraction: false,
                 }}
-                onSwiper={(swiper) => console.log(swiper)}
-                onSlideChange={() => console.log('slide change')}
+                // onSwiper={(swiper) => console.log(swiper)}
+                // onSlideChange={() => console.log('slide change')}
             >
                 {
                     courses.slice(0, 6).map((course, idx) =>
