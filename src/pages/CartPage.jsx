@@ -27,6 +27,8 @@ const CartPage = () => {
         })
   }, []);
 
+
+
   const handleRemove=(userId,courseId)=>{
     handleCartRemove(userId,courseId);
     const newCart=cart.filter((cartitem)=>cartitem.course_id !== courseId);
@@ -37,6 +39,7 @@ newCart.forEach((item) => {
 });
 setTotal(newTotal);
   }
+
   const handleAddOrder = async () => {
    try {
     const orderItems = cart.map((cartitem) => ({
@@ -65,9 +68,7 @@ setTotal(newTotal);
     console.error('Order error:', err);
   }
 
-};
-
-
+  }
   return (
     <div className="max-w-4xl mx-auto p-4 mt-20">
       <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
