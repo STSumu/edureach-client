@@ -19,7 +19,7 @@ const WishPage = () => {
   const handleRemove = (crsId) => {
         handleWishRemove(dbUser.user_id,crsId);
         const newWish=wish.filter((wishitem)=>wishitem.course_id !== crsId);
-    setWish(newWish);
+        setWish(newWish);
   };
 
 

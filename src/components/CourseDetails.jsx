@@ -12,28 +12,26 @@ import CourseContent from "./CourseContent";
 import useAddtoList from "../functions/addToList";
 import { EnrollContext } from "../context/EnrollmentProvider";
 import Material from "../pages/Material";
+import useFetch from "../functions/fetch";
 
 const CourseDetails = () => {
   const { baseUrl, dbUser, loading } = useContext(authContext);
-  const userId = dbUser.user_id;
+  const userId = dbUser?.user_id;
   const params = useParams();
   const [course, setCourse] = useState([]);
-  const {getEnroll}=useContext(EnrollContext);  
+  const {enroll}=useContext(EnrollContext);  
   const {handleAddCart,handleAddWishList}=useAddtoList();
+  const {fetchCourse}=useFetch();
 
-
-  useEffect(()=>{
-    fetch(`${baseUrl}/courses/${params?.course_id}`)
-    .then(res => res.json())
-      .then(data => setCourse(data));
-  },[])
+  ;
+ useEffect(() => {
+  const loadCourse = async () => {
+    const data = await fetchCourse(params?.course_id);
+    setCourse(data ? [data] : []); 
+  };
+  loadCourse();
+}, [params?.course_id]);
   
-
-    useEffect(() => {
-    if (course.length > 0 && dbUser) {
-      getEnroll(course[0].course_id);
-    }
-  }, [course, dbUser, getEnroll]);
 
   if (loading || !dbUser || !course || course.length === 0) {
     return <Loading />;
@@ -104,7 +102,7 @@ const CourseDetails = () => {
         <div className="container mx-auto px-4 md:px-10 lg:px-15 mt-10">
           <h3 className="font-bold text-3xl pb-4">Course Content</h3>
           
-          <CourseContent course_id={course_id}></CourseContent>
+          <CourseContent course_id={course_id} key={course_id}></CourseContent>
           
         </div>
     </div>
