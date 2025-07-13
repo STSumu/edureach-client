@@ -3,25 +3,23 @@ import { authContext } from './AuthProvider';
 
 export const EnrollContext=createContext();
 const EnrollmentProvider = ({children}) => {
-    const [enroll,setEnroll]=useState(false);
+    const [enroll,setEnroll]=useState([]);
     const [enLoad,setEnLoad]=useState(false);
     const {baseUrl,dbUser}=useContext(authContext);
 
-     const getEnroll=async (course_id)=>{
-      try {
-        const res = await fetch(`${baseUrl}/enroll/${dbUser.user_id}?courseId=${course_id}`);
-        const data = await res.json();
-        setEnroll(data.enrolled);
-        setEnLoad(true);
-      }
-       catch (err) {
-        console.error("Error fetching user from DB:", err);
-      }
-     
-    }
+     useEffect(()=>{
+          if(dbUser){
+            fetch(`${baseUrl}/enroll/${dbUser.user_id}`)
+          .then(res=>res.json())
+          .then(data=>{
+            setEnroll(data.mycourses);
+            setEnLoad(true);
+          })
+          }
+     },[dbUser])
+    
     const enrollInfo=
-    {
-        getEnroll,
+    { 
         enroll,
         enLoad,
     }

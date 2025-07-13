@@ -27,8 +27,8 @@ const CourseContent = ({course_id}) => {
            : 
            <div className="flex flex-col">
            {
-          content.map((material) => 
-            <div className="bg-gray-200 border-1 border-gray-400 p-4 md:px-8 flex justify-between items-center">
+          content.map((material,idx) => 
+            <div key={idx} className="bg-gray-200 border-1 border-gray-400 p-4 md:px-8 flex justify-between items-center">
             <div className="flex gap-4">
                 {
                 material.type== 'video' ? <FaVideo></FaVideo> : <FaFilePdf></FaFilePdf>
