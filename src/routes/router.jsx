@@ -58,6 +58,10 @@ export const router = createBrowserRouter([
     path:'/order',
     element:<OrderPage></OrderPage>,
   },
+  {
+    path:'/video',
+    element:<EnrolledCourse></EnrolledCourse>,
+  },
       {
     path:'/wish',
     element:<PrivateRoute><WishPage></WishPage></PrivateRoute>,
