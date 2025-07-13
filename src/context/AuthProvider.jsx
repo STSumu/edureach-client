@@ -74,6 +74,7 @@ const AuthProvider = ({children}) => {
         console.error("Error fetching user from DB:", err);
       }
     } else {
+      setLoading(true);
       setDbUser(null);
     }
   });
