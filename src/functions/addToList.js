@@ -112,7 +112,6 @@ const useAddtoList = () => {
     //   userId,
     //   courseId,
     // }
-    console.log(userId,courseId);
     const res = await fetch(`${baseUrl}/order/`, {
       method: 'POST',
       headers: {

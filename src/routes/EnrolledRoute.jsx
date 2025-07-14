@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useContext } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { authContext } from '../context/AuthProvider';
 import Loading from '../components/Loading';
 import { EnrollContext } from '../context/EnrollmentProvider';
@@ -9,16 +9,16 @@ import CourseContent from '../components/CourseContent';
 import useAddtoList from '../functions/addToList';
 
 const EnrolledRoute = ({children}) => {
+  const param=useParams();
     const {dbUser}=useContext(authContext);
     const {handleAddOrder}=useAddtoList();
     const {enroll,enLoad}=useContext(EnrollContext);
-    const location=useLocation();
     const userId=dbUser?.user_id;
     const [redirect, setRedirect] = React.useState(false);
-    const courseId=location.state.courseId;
+    const courseId=param.courseId;
     
   useEffect(() => {
-    if (enLoad && dbUser && !enroll.includes(courseId)) {
+    if (enLoad && dbUser && !enroll.includes(Number(courseId))) {
       Swal.fire({
         title: 'You need to buy this course',
         icon: 'info',
@@ -48,7 +48,7 @@ const EnrolledRoute = ({children}) => {
     if (!enLoad || !dbUser || !courseId) {
   return <Loading />;
 }
-    if(enroll.includes(courseId)){
+    if(enroll.includes(Number(courseId))){
        return children;
     }
     if(redirect){

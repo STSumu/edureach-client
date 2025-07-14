@@ -48,11 +48,7 @@ export const router = createBrowserRouter([
         element:<PrivateRoute><MyCourses></MyCourses></PrivateRoute>
       },
       {
-        path:'/myCourse',
-        element:<EnrolledRoute><EnrolledCourse></EnrolledCourse></EnrolledRoute>
-      },
-      {
-        path:'/content/:materialId',
+        path:'/content/:courseId/:matId',
         element:<EnrolledRoute><Material></Material></EnrolledRoute>
       },
       {
@@ -62,10 +58,6 @@ export const router = createBrowserRouter([
   {
     path:'/order',
     element:<OrderPage></OrderPage>,
-  },
-  {
-    path:'/video',
-    element:<EnrolledCourse></EnrolledCourse>,
   },
       {
     path:'/wish',
