@@ -6,7 +6,7 @@ import Course from '../components/Course';
 import Loading from '../components/Loading';
 
 const MyCourses = () => {
-    const {enroll}=useContext(EnrollContext);
+    const {enroll,enLoad}=useContext(EnrollContext);
     const {fetchCourse}=useFetch();
     const [myCourses, setMyCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ const MyCourses = () => {
       }
     };
 
-    if (enroll.length > 0) {
+    if (enLoad) {
       loadCourses();
     } else {
       setLoading(false);

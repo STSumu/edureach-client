@@ -18,7 +18,7 @@ const CourseContent = ({course_id}) => {
     
   }, [])
   if(!loaded){
-    <Loading></Loading>
+    return <Loading></Loading>
   }
     return (
             <div>
@@ -36,7 +36,7 @@ const CourseContent = ({course_id}) => {
             <h4>{material.title}</h4>
             </div>
             <div> {
-                material.type== 'video' ? <Link to={`/content/${material.material_id}`} state={{ courseId: course_id }} className="btn"><FaPlay></FaPlay></Link> : <FaQuestion></FaQuestion>
+                material.type== 'video' ? <Link to={`/content/${course_id}/${material.material_id}`} className="btn"><FaPlay></FaPlay></Link> : <FaQuestion></FaQuestion>
             }</div>
         </div>
           )
