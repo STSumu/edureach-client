@@ -10,34 +10,37 @@ import { GiDuration } from "react-icons/gi";
 import Loading from "./Loading";
 import CourseContent from "./CourseContent";
 import useAddtoList from "../functions/addToList";
+import { EnrollContext } from "../context/EnrollmentProvider";
+import Material from "../pages/Material";
+import useFetch from "../functions/fetch";
 
 const CourseDetails = () => {
   const { baseUrl, dbUser, loading } = useContext(authContext);
-  const userId = dbUser.user_id;
+  const userId = dbUser?.user_id;
   const params = useParams();
-  const [materials, setMaterials] = useState([]);
   const [course, setCourse] = useState([]);
-
+  const {enroll}=useContext(EnrollContext);  
   const {handleAddCart,handleAddWishList}=useAddtoList();
+  const {fetchCourse}=useFetch();
 
+  ;
+ useEffect(() => {
+  const loadCourse = async () => {
+    const data = await fetchCourse(params?.course_id);
+    setCourse(data ? [data] : []); 
+  };
+  loadCourse();
+}, [params?.course_id]);
+  
 
-  useEffect(()=>{
-    fetch(`${baseUrl}/courses/${params?.course_id}`)
-    .then(res => res.json())
-      .then(data => setCourse(data));
-  },[])
-  useEffect(() => {
-    fetch(`${baseUrl}/materials/${params?.course_id}`)
-      .then(res => res.json())
-      .then(data => setMaterials(data));
-    
-  }, [])
-
-  if (loading || !course || course.length==0) {
-  return <Loading />;
-}
+  if (loading || !dbUser || !course || course.length === 0) {
+    return <Loading />;
+  }
 
   const { course_name, course_id, category, status, instructor, duration, price, updated_at, thumb_url, description, rating, totalstudent } = course[0];
+  
+
+
   const date = new Date(updated_at);
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
@@ -47,9 +50,7 @@ const CourseDetails = () => {
     }
 
   
-  
-
-
+ 
   return (
     <div className="mt-15 md:mt-10">
       <div className="p-4 md:p-10 md:px-25 bg-[#471608] text-white flex justify-center flex-col md:mb-20">
@@ -101,16 +102,7 @@ const CourseDetails = () => {
         <div className="container mx-auto px-4 md:px-10 lg:px-15 mt-10">
           <h3 className="font-bold text-3xl pb-4">Course Content</h3>
           
-           {materials.length == 0 ?
-           <div className="flex items-center"> <h1 className="text-xl font-bold text-gray-500">Upcoming</h1></div>
-           : 
-           <div className="flex flex-col">
-           {
-          materials.map((material, idx) => <CourseContent material={material} key={idx}></CourseContent>)
-          }
-          </div>
-}
-          
+          <CourseContent course_id={course_id} key={course_id}></CourseContent>
           
         </div>
     </div>

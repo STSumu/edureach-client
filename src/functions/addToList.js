@@ -9,6 +9,10 @@ const useAddtoList = () => {
   const navigate = useNavigate();
 
   const handleAddCart = (cartItem) => {
+    // cartItem={
+    //   userId,
+    // course_id
+    // }
     fetch(`${baseUrl}/cart`, {
       method: "POST",
       headers: {
@@ -100,10 +104,37 @@ const useAddtoList = () => {
           } 
   });
 
+
   }
+  const handleAddOrder = async ({userId,courseId}) => {
+   try {
+    // orderItem={
+    //   userId,
+    //   courseId,
+    // }
+    const res = await fetch(`${baseUrl}/order/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({userId,courseId}),
+    });
+
+    const data = await res.json();
+
+    if (data.order_id) {
+      navigate('/order');
+    } else {
+      console.error('Order creation failed:', data);
+    }
+  } catch (err) {
+    console.error('Order error:', err);
+  }
+}
+
  
 
-  return {handleAddCart,handleAddWishList,handleCartRemove,handleWishRemove};
+  return {handleAddCart,handleAddWishList,handleCartRemove,handleWishRemove,handleAddOrder};
 };
 
 export default useAddtoList;

@@ -3,15 +3,15 @@ import CartItem from '../components/CartItem';
 import { authContext } from '../context/AuthProvider';
 import useAddtoList from '../functions/addToList';
 import { FaArrowRight } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+
 
 
 const CartPage = () => {
   const [cart,setCart]=useState([]);
   const {dbUser,baseUrl}=useContext(authContext);
   const [total,setTotal]=useState(0);
-  const {handleCartRemove}=useAddtoList();
-  const navigate=useNavigate();
+  const {handleCartRemove,handleAddOrder}=useAddtoList();
+
   useEffect(() => {
       fetch(`${baseUrl}/cart/${dbUser.user_id}`)
         .then((res) => res.json())
@@ -40,35 +40,18 @@ newCart.forEach((item) => {
 setTotal(newTotal);
   }
 
-  const handleAddOrder = async () => {
-   try {
-    const orderItems = cart.map((cartitem) => ({
+  
+    const handleOrder = () => {
+        const orderItems = cart.map((cartitem) => ({
       courseId: cartitem.course_id,
     }));
-
-    const res = await fetch(`${baseUrl}/order/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: dbUser.user_id,
-        courses: orderItems,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (data.order_id) {
-      navigate('/order');
-    } else {
-      console.error('Order creation failed:', data);
+    for(const item of orderItems){
+      console.log(item.courseId);
+        handleAddOrder({ userId: dbUser.user_id, courseId: item.courseId });
     }
-  } catch (err) {
-    console.error('Order error:', err);
-  }
-
-  }
+        
+    }
+  
   return (
     <div className="max-w-4xl mx-auto p-4 mt-20">
       <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
@@ -89,7 +72,7 @@ setTotal(newTotal);
         </div>
         <div className="flex justify-end pt-5">
           <button
-            className="btn bg-[#B14E0F] md:flex text-white text-sm font-semibold rounded-lg" onClick={handleAddOrder}
+            className="btn bg-[#B14E0F] md:flex text-white text-sm font-semibold rounded-lg" onClick={handleOrder}
           >
             Proceed to Checkout <FaArrowRight></FaArrowRight>
           </button>

@@ -189,7 +189,7 @@ const navigate = useNavigate();
                 </div>
               </li>
               <li>
-                <Link>My Courses</Link>
+                <Link to='/mycourses'>My Courses</Link>
               </li>
               <li>
                

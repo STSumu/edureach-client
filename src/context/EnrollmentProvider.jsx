@@ -1,15 +1,38 @@
-import React, { Children, createContext, useEffect, useState } from 'react';
+import React, { Children, createContext, useContext, useEffect, useState } from 'react';
+import { authContext } from './AuthProvider';
 
-const EnrollContext=createContext();
+export const EnrollContext=createContext();
 const EnrollmentProvider = ({children}) => {
-    
-    useEffect(()=>{
-},[])
-    const enroll={
+    const [enroll,setEnroll]=useState([]);
+    const [enLoad,setEnLoad]=useState(false);
+    const {baseUrl,dbUser}=useContext(authContext);
 
+     useEffect(()=>{
+          if(dbUser){
+            fetch(`${baseUrl}/enroll/${dbUser.user_id}`)
+          .then(res=>res.json())
+          .then(data=>{
+            setEnroll(data.mycourses);
+            setEnLoad(true);
+          })
+          }
+     },[dbUser])
+    const isEnrolled=(courseId)=>{
+        if(enroll.includes(Number(courseId))){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    const enrollInfo=
+    { 
+        enroll,
+        enLoad,
+        isEnrolled,
     }
     return (
-        <EnrollContext.Provider value={enroll}>
+        <EnrollContext.Provider value={enrollInfo}>
             {children}
         </EnrollContext.Provider>
     );

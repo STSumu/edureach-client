@@ -18,6 +18,7 @@ import EnrolledCourse from "../pages/EnrolledCourse";
 import Material from "../pages/Material";
 import OrderPage from "../pages/OrderPage";
 import Payment from "../pages/Payment";
+import MyCourses from "../pages/MyCourses";
 
 
 export const router = createBrowserRouter([
@@ -43,11 +44,11 @@ export const router = createBrowserRouter([
         element:<PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
       },
       {
-        path:'/myCourse',
-        element:<EnrolledRoute><EnrolledCourse></EnrolledCourse></EnrolledRoute>
+        path:'/mycourses',
+        element:<PrivateRoute><MyCourses></MyCourses></PrivateRoute>
       },
       {
-        path:'/content/:materialId',
+        path:'/content/:courseId/:matId',
         element:<EnrolledRoute><Material></Material></EnrolledRoute>
       },
       {
