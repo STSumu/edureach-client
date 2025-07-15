@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FaBook, FaFilePdf, FaPlay, FaQuestion, FaVideo } from "react-icons/fa";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
 import Loading from "./Loading";
 
@@ -8,6 +8,8 @@ const CourseContent = ({course_id}) => {
     const [content,setContent]=useState([]);
     const {baseUrl}=useContext(authContext);
     const [loaded,setLoaded]=useState(false);
+    const location=useLocation();
+    console.log(location);
     useEffect(() => {
     fetch(`${baseUrl}/materials/${course_id}`)
       .then(res => res.json())
