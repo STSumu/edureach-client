@@ -11,15 +11,17 @@ const Material = () => {
   const { baseUrl,dbUser } = useContext(authContext);
   const [material, setMaterial] = useState();
   const params = useParams();
+  const [buttonState,setbuttonState]=useState(false);
   useEffect(() => {
-    fetch(`${baseUrl}/materials/mat/${params?.matId}`)
+    fetch(`${baseUrl}/materials/mat/${params?.matId}?stdId=${dbUser.user_id}`)
       .then(res => res.json())
       .then(data => setMaterial(data));
 
   }, [params?.matId, baseUrl])
-
+  
+  
   if (!material) return <Loading></Loading>;
-  const { url, title,course_id } = material[0];
+  const { url,course_id,islocked } = material[0];
   const getEmbedUrl = (url) => {
     if (!url) return "";
 
@@ -44,7 +46,14 @@ const Material = () => {
   const embedUrl = getEmbedUrl(url);
   return (
     <div className="mt-17 md:mt-10">
-      <div>
+      {
+        islocked ? 
+        <div className="container mx-auto p-6 text-center">
+      <h2 className="text-xl font-bold mb-4">Content Locked</h2>
+      <p>You cannot watch this video until you unlock it by completing previous materials or enrolling.</p>
+    </div>
+        :
+        <div>
         <iframe
           className="w-screen h-[75vh] z-0"
           width="560"
@@ -56,6 +65,7 @@ const Material = () => {
           allowFullScreen
         ></iframe>
       </div>
+      }
       <div className='container mx-auto px-4 md:px-8'>
         <Tabs>
           <TabList className="flex flex-wrap gap-0 border-b border-gray-200 items-center justify-center">
@@ -74,7 +84,7 @@ const Material = () => {
           <TabPanel >
             <div className='my-10 max-w-3/4 mx-auto'>
               <h2 className="text-xl font-semibold mb-2">Course Content</h2>
-              <CourseContent course_id={params?.courseId}></CourseContent>
+              <CourseContent course_id={params?.courseId} setbuttonState={setbuttonState}></CourseContent>
             </div>
           </TabPanel>
           <TabPanel >
@@ -85,7 +95,7 @@ const Material = () => {
             <h2 className="text-xl font-semibold mb-2">Discussion</h2>
             <p>Students and instructors can ask/answer questions here.</p>
           </TabPanel> */}
-           <TabPanel className="p-6 border border-t-0 border-gray-300 bg-white shadow-sm">
+           <TabPanel>
             <Discussion courseId={course_id} currentUser={dbUser.user_id} />
           </TabPanel>
           <TabPanel>
@@ -93,6 +103,9 @@ const Material = () => {
             <p>All available quizzes will show up in this section.</p>
           </TabPanel>
         </Tabs>
+      </div>
+      <div className='container mx-auto flex justify-end px-4 md:px-50'>
+        <button className={`btn ${!buttonState ? `disabled bg-amber-900/50` : `Enabled bg-amber-200`}`}>Complete</button>
       </div>
     </div>
 

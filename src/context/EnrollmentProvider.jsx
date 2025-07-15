@@ -17,11 +17,19 @@ const EnrollmentProvider = ({children}) => {
           })
           }
      },[dbUser])
-    
+    const isEnrolled=(courseId)=>{
+        if(enroll.includes(Number(courseId))){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     const enrollInfo=
     { 
         enroll,
         enLoad,
+        isEnrolled,
     }
     return (
         <EnrollContext.Provider value={enrollInfo}>
