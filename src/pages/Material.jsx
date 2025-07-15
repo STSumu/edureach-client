@@ -7,19 +7,19 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 
 const Material = () => {
-    const {baseUrl}=useContext(authContext);
-    const[material,setMaterial]=useState();
-    const params=useParams();
-    useEffect(() => {
-        fetch(`${baseUrl}/materials/mat/${params?.matId}`)
-          .then(res => res.json())
-          .then(data => setMaterial(data));
-        
-      }, [])
+  const { baseUrl } = useContext(authContext);
+  const [material, setMaterial] = useState();
+  const params = useParams();
+  useEffect(() => {
+    fetch(`${baseUrl}/materials/mat/${params?.matId}`)
+      .then(res => res.json())
+      .then(data => setMaterial(data));
 
-      if (!material) return <Loading></Loading>;
-      const {url,title}=material[0];
-      const getEmbedUrl = (url) => {
+  }, [params?.matId, baseUrl])
+
+  if (!material) return <Loading></Loading>;
+  const { url, title } = material[0];
+  const getEmbedUrl = (url) => {
     if (!url) return "";
 
     try {
@@ -41,8 +41,8 @@ const Material = () => {
   };
 
   const embedUrl = getEmbedUrl(url);
-    return (
-<div className="mt-17 md:mt-10">
+  return (
+    <div className="mt-17 md:mt-10">
       <div>
         <iframe
           className="w-screen h-[75vh] z-0"
@@ -56,23 +56,24 @@ const Material = () => {
         ></iframe>
       </div>
       <div className='container mx-auto px-4 md:px-8'>
-         <Tabs>
+        <Tabs>
           <TabList className="flex flex-wrap gap-0 border-b border-gray-200 items-center justify-center">
             {["Course Content", "Overview", "Discussion", "Quiz"].map((title, idx) => (
               <Tab
                 key={idx}
-                className="cursor-pointer py-2 px-4  border border-gray-300 bg-gray-100 hover:bg-[#f0b086] react-tabs__tab"
-                selectedClassName="bg-white border-b-0 border-gray-300 font-semibold text-blue-600"
+                className="cursor-pointer py-2 px-4 border border-gray-300 bg-gray-100 hover:bg-[#f0b086] react-tabs__tab"
+                selectedClassName="!bg-[#F2EEEC] border-b-0 !border-[#B14E0F] font-semibold text-[#B14E0F]"
               >
                 {title}
               </Tab>
+
             ))}
           </TabList>
 
           <TabPanel >
             <div className='my-10 max-w-3/4 mx-auto'>
               <h2 className="text-xl font-semibold mb-2">Course Content</h2>
-            <CourseContent course_id={params?.courseId}></CourseContent>
+              <CourseContent course_id={params?.courseId}></CourseContent>
             </div>
           </TabPanel>
           <TabPanel >
@@ -91,7 +92,7 @@ const Material = () => {
       </div>
     </div>
 
-    );
+  );
 };
 
 export default Material;

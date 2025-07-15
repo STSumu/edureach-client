@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FaBook, FaFilePdf, FaPlay, FaQuestion, FaVideo } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
 import Loading from "./Loading";
 
@@ -28,17 +28,22 @@ const CourseContent = ({course_id}) => {
            <div className="flex flex-col">
            {
           content.map((material,idx) => 
-            <div key={idx} className="bg-gray-200 border-1 border-gray-400 p-4 md:px-8 flex justify-between items-center">
-            <div className="flex gap-4">
-                {
-                material.type== 'video' ? <FaVideo></FaVideo> : <FaFilePdf></FaFilePdf>
-            }
-            <h4>{material.title}</h4>
-            </div>
-            <div> {
-                material.type== 'video' ? <Link to={`/content/${course_id}/${material.material_id}`} className="btn"><FaPlay></FaPlay></Link> : <FaQuestion></FaQuestion>
-            }</div>
-        </div>
+            <NavLink key={idx}
+  to={`/content/${course_id}/${material.material_id}`}
+  className={({ isActive }) =>
+    `flex justify-between items-center p-4 md:px-8 border border-gray-400 ${
+      isActive ? "bg-[#F2EEEC] border-orange-900 font-semibold *:text-[#B14E0F]" : "bg-gray-200"
+    }`
+  }
+>
+  <div className="flex gap-4">
+    {material.type === "video" ? <FaVideo /> : <FaFilePdf />}
+    <h4>{material.title}</h4>
+  </div>
+  <div>
+    {material.type === "video" ? <FaPlay /> : <FaQuestion />}
+  </div>
+</NavLink>
           )
         }
           </div>

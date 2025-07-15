@@ -3,6 +3,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Finger+Paint&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 @plugin "daisyui";
 
+.react-tabs__tab--selected {
+  @apply bg-[#F2EEEC] border-b-0 border-gray-300 font-semibold text-[#B14E0F];
+}
+
 .roboto-font {
   font-family: "Roboto", sans-serif;
 }
