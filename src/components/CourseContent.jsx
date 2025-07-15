@@ -28,6 +28,8 @@ const CourseContent = ({ course_id,setbuttonState}) => {
   getContent();
 }, [course_id, dbUser.user_id]);
 
+
+
 const handleCompletion = async (matId) => {
   if (!isEnrolled(course_id)) {
     alert("You must enroll first!");
@@ -54,14 +56,20 @@ const handleCompletion = async (matId) => {
   if (data.inserted) {
     const updated = await fetchMaterial(course_id, dbUser.user_id);
     setContent(updated);
-    const lastMaterialId = updated[updated.length - 1]?.material_id;
-    if (String(matId) === String(lastMaterialId)) {
+  }
+  
+  
+};
+  useEffect(()=>{
+    if (!setbuttonState) return;
+    const allUnlocked = content.every(mat => mat.islocked === false);
+    console.log(allUnlocked);
+if (allUnlocked) {
   setbuttonState(true);
 } else {
   setbuttonState(false);
 }
-  }
-};
+  },[])
 
 
 
