@@ -69,7 +69,7 @@ const Discussion = ({ courseId, currentUser }) => {
           onBack={handleBackToThreads}
         />
       )}
-      
+      {/* {quizes.map((quiz)=<Quiz quizId={quiz_id}></Quiz>)} */}
       {activeView === 'create' && (
         <CreateThread 
           courseId={courseId}
