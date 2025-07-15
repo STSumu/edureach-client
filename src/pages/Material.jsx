@@ -5,9 +5,10 @@ import Loading from '../components/Loading';
 import CourseContent from '../components/CourseContent';
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+import Discussion from '../components/Discussion';
 
 const Material = () => {
-  const { baseUrl } = useContext(authContext);
+  const { baseUrl,dbUser } = useContext(authContext);
   const [material, setMaterial] = useState();
   const params = useParams();
   useEffect(() => {
@@ -18,7 +19,7 @@ const Material = () => {
   }, [params?.matId, baseUrl])
 
   if (!material) return <Loading></Loading>;
-  const { url, title } = material[0];
+  const { url, title,course_id } = material[0];
   const getEmbedUrl = (url) => {
     if (!url) return "";
 
@@ -80,9 +81,12 @@ const Material = () => {
             <h2 className="text-xl font-semibold mb-2">Overview</h2>
             <p>This section contains a general overview of the course.</p>
           </TabPanel>
-          <TabPanel>
+          {/* <TabPanel>
             <h2 className="text-xl font-semibold mb-2">Discussion</h2>
             <p>Students and instructors can ask/answer questions here.</p>
+          </TabPanel> */}
+           <TabPanel className="p-6 border border-t-0 border-gray-300 bg-white shadow-sm">
+            <Discussion courseId={course_id} currentUser={dbUser.user_id} />
           </TabPanel>
           <TabPanel>
             <h2 className="text-xl font-semibold mb-2">Quiz</h2>
