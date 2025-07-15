@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
+
 import { FaBook, FaFilePdf, FaLock, FaLockOpen, FaPlay, FaQuestion, FaVideo } from "react-icons/fa";
 import { Link, NavLink } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
 import Loading from "./Loading";
 import { EnrollContext } from "../context/EnrollmentProvider";
 import useFetch from "../functions/fetch";
+
 
 const CourseContent = ({ course_id,setbuttonState}) => {
   const [content, setContent] = useState([]);
@@ -36,14 +38,14 @@ const handleCompletion = async (matId) => {
     return;
   }
 
-  // If current material is locked, prevent access
+
   const material = content.find(m => m.material_id === matId);
   if (material.islocked) {
     alert("This material is locked. Complete the previous one first.");
     return;
   }
 
-  // Insert to mat_completion (mark as complete)
+
   const res = await fetch(`${baseUrl}/materials/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -52,7 +54,6 @@ const handleCompletion = async (matId) => {
 
   const data = await res.json();
 
-  // Refetch content to update lock status
   if (data.inserted) {
     const updated = await fetchMaterial(course_id, dbUser.user_id);
     setContent(updated);
@@ -74,6 +75,7 @@ if (allUnlocked) {
 
 
   if (!loaded || !dbUser) {
+
     return <Loading></Loading>;
   }
   return (
