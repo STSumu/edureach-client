@@ -6,6 +6,8 @@ import CourseContent from '../components/CourseContent';
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import Discussion from '../components/Discussion';
+import QuizPage from '../components/QuizPage';
+import ChooseQuizPage from '../components/ChooseQuiz';
 
 const Material = () => {
   const { baseUrl,dbUser } = useContext(authContext);
@@ -99,8 +101,7 @@ const Material = () => {
             <Discussion courseId={course_id} currentUser={dbUser.user_id} />
           </TabPanel>
           <TabPanel>
-            <h2 className="text-xl font-semibold mb-2">Quiz</h2>
-            <p>All available quizzes will show up in this section.</p>
+           <ChooseQuizPage></ChooseQuizPage>
           </TabPanel>
         </Tabs>
       </div>
