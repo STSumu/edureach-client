@@ -14,8 +14,30 @@ const useFetch = () => {
       return null;
     }
   };
+  const fetchMaterial=async(courseId,stdId)=>{
+    try{
+       const result=await fetch(`${baseUrl}/materials/${courseId}?stdId=${stdId}`)
+      const data= result.json();
+      return data;
+    }
+    catch(err){
+      console.error('Fetch material error',err);
+      return null
+    }
+  };
+  const fetchMaterialWithAccess=async(matId,stdId)=>{
+    try{
+       const result=await fetch(`${baseUrl}/materials/mat/${matId}?stdId=${stdId}`)
+      const data= result.json();
+      return data;
+    }
+    catch(err){
+      console.error('Fetch material error',err);
+      return null
+    }
+  };
 
- return {fetchCourse};
+ return {fetchCourse,fetchMaterial,fetchMaterialWithAccess};
 };
 
 export default useFetch;
