@@ -20,6 +20,7 @@ import OrderPage from "../pages/OrderPage";
 import Payment from "../pages/Payment";
 import MyCourses from "../pages/MyCourses";
 import Quiz from "../pages/Quiz";
+import CertificatePage from "../pages/CertificatePage";
 
 export const router = createBrowserRouter([
   {
@@ -59,7 +60,7 @@ export const router = createBrowserRouter([
         path: "/content/:courseId/:matId",
         element: (
           <EnrolledRoute>
-            <Material></Material>
+            <EnrolledCourse></EnrolledCourse>
           </EnrolledRoute>
         ),
       },
@@ -73,7 +74,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/order",
-        element: <OrderPage></OrderPage>,
+        element: <PrivateRoute><OrderPage></OrderPage></PrivateRoute>,
       },
       {
         path: "/wish",
@@ -95,6 +96,10 @@ export const router = createBrowserRouter([
       {
         path:'/quiz/:quizId',
         element:<Quiz></Quiz>
+      },
+      {
+        path:'/complete/:courseId',
+        element:<PrivateRoute><CertificatePage></CertificatePage></PrivateRoute>
       }
     ],
   },

@@ -38,7 +38,7 @@ const Register = () => {
           })
           .then((result) => {
     if (result.isConfirmed) {
-      
+      e.target.reset();
       navigate('/auth/login');
     }
   });

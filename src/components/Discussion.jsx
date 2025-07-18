@@ -20,6 +20,7 @@ const Discussion = ({ courseId, currentUser }) => {
     try {
       const response = await fetch(`${baseUrl}/discussion/threads/${courseId}`);
       const data = await response.json();
+      console.log(data);
       setThreads(data);
       setLoading(false);
     } catch (error) {
@@ -28,33 +29,49 @@ const Discussion = ({ courseId, currentUser }) => {
     }
   };
 
-  const handleThreadClick = (thread) => {
-    setSelectedThread(thread);
-    setActiveView('thread');
-  };
+  // const handleThreadClick = (thread) => {
+  //   setSelectedThread(thread);
+  //   setActiveView('thread');
+  // };
 
-  const handleCreateThread = () => {
-    setActiveView('create');
-  };
+  // const handleCreateThread = () => {
+  //   setActiveView('create');
+  // };
 
-  const handleBackToThreads = () => {
-    setActiveView('threads');
-    setSelectedThread(null);
-    fetchThreads(); // Refresh threads
-  };
+  // const handleBackToThreads = () => {
+  //   setActiveView('threads');
+  //   setSelectedThread(null);
+  //   fetchThreads(); // Refresh threads
+  // };
 
-  const handleThreadCreated = () => {
-    setActiveView('threads');
-    fetchThreads();
-  };
+  // const handleThreadCreated = () => {
+  //   setActiveView('threads');
+  //   fetchThreads();
+  // };
 
   if (loading) {
     return <Loading></Loading>;
   }
 
   return (
-    <div className="discussion-container">
-      {activeView === 'threads' && (
+    <div className='border-black h-45 border-2'>
+      {
+        threads.map((thread)=>
+          <div className='flex flex-col'>
+            <div>
+          <h2>{thread.created_by}</h2>
+      </div>
+      <div>
+          <h3>{thread.title}</h3>
+      </div>
+      <div>
+          <p>last updated at{thread.updated_at}</p>
+      </div>
+            </div>
+        )
+      }
+      
+      {/* {activeView === 'threads' && (
         <ThreadList 
           threads={threads}
           onThreadClick={handleThreadClick}
@@ -70,16 +87,15 @@ const Discussion = ({ courseId, currentUser }) => {
         />
       )}
       {/* {quizes.map((quiz)=<Quiz quizId={quiz_id}></Quiz>)} */}
-      {activeView === 'create' && (
+      {/* {activeView === 'create' && (
         <CreateThread 
           courseId={courseId}
           currentUser={currentUser}
           onBack={handleBackToThreads}
           onThreadCreated={handleThreadCreated}
         />
-      )}
-    </div>
-  );
-};
+      )}*/} 
+    </div> 
+)};
 
 export default Discussion;

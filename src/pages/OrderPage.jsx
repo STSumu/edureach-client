@@ -6,6 +6,7 @@ import OrderItem from '../components/OrderItem';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Loading from '../components/Loading';
+import Swal from 'sweetalert2';
 
 
 const OrderPage = () => {
@@ -36,6 +37,14 @@ const OrderPage = () => {
     setPaymethod(e.target.value);
   }
   const handleOrderConfirm = () => {
+    if (!payMethod) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Select a Payment Method',
+      text: 'Please choose a payment method before proceeding.',
+    });
+    return;
+  }
     const confirmItem = {
       stdId: dbUser.user_id,
       method: payMethod,
@@ -158,7 +167,7 @@ const OrderPage = () => {
               </div>
             </div>
             <p className='text-xs text-gray-500 mb-2'>By completing your purchase, you agree to these Terms of Use.</p>
-            <button onClick={handleOrderConfirm} className="btn btn-md mt-2 bg-[#B14E0F] w-full text-white py-3 rounded font-semibold hover:bg-white hover:text-[#B14E0F] hover:border-[#B14E0F] border-1 transition">
+            <button onClick={handleOrderConfirm}  className="btn btn-md mt-2 bg-[#B14E0F] w-full text-white py-3 rounded font-semibold hover:bg-white hover:text-[#B14E0F] hover:border-[#B14E0F] border-1 transition">
               Process to payment →
             </button>
 

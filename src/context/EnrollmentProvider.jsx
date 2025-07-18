@@ -12,12 +12,13 @@ const EnrollmentProvider = ({children}) => {
             fetch(`${baseUrl}/enroll/${dbUser.user_id}`)
           .then(res=>res.json())
           .then(data=>{
-            setEnroll(data.mycourses);
+            setEnroll(data.mycourses ?? []);
             setEnLoad(true);
           })
           }
      },[dbUser])
     const isEnrolled=(courseId)=>{
+        if (!Array.isArray(enroll)) return false;
         if(enroll.includes(Number(courseId))){
             return true;
         }

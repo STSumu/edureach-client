@@ -1,115 +1,117 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { authContext } from '../context/AuthProvider';
-import Loading from '../components/Loading';
-import CourseContent from '../components/CourseContent';
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import "react-tabs/style/react-tabs.css";
-import Discussion from '../components/Discussion';
-import QuizPage from '../components/QuizPage';
-import ChooseQuizPage from '../components/ChooseQuiz';
+import { useContext, useEffect, useState } from "react";
 
-const Material = () => {
-  const { baseUrl,dbUser } = useContext(authContext);
-  const [material, setMaterial] = useState();
-  const params = useParams();
-  const [buttonState,setbuttonState]=useState(false);
+import { FaBook, FaFilePdf, FaLock, FaLockOpen, FaPlay, FaQuestion, FaVideo } from "react-icons/fa";
+import { Link, NavLink } from "react-router-dom";
+import { authContext } from "../context/AuthProvider";
+import Loading from "../components/Loading";
+import { EnrollContext } from "../context/EnrollmentProvider";
+import useFetch from "../functions/fetch";
+
+
+const Material = ({ course_id,setbuttonState}) => {
+  const [content, setContent] = useState([]);
+  const { dbUser,baseUrl } = useContext(authContext);
+  const [loaded, setLoaded] = useState(false);
+  const {isEnrolled}=useContext(EnrollContext);
+  const [completedSet, setCompletedSet] = useState(new Set());
+  const {fetchMaterial}=useFetch();
+
   useEffect(() => {
-    fetch(`${baseUrl}/materials/mat/${params?.matId}?stdId=${dbUser.user_id}`)
-      .then(res => res.json())
-      .then(data => setMaterial(data));
-
-  }, [params?.matId, baseUrl])
-  
-  
-  if (!material) return <Loading></Loading>;
-  const { url,course_id,islocked } = material[0];
-  const getEmbedUrl = (url) => {
-    if (!url) return "";
-
-    try {
-      if (url.includes("youtu.be")) {
-        const videoId = url.split("youtu.be/")[1].split(/[?&]/)[0];
-        return `https://www.youtube.com/embed/${videoId}`;
-      }
-
-      const urlObj = new URL(url);
-      const videoId = urlObj.searchParams.get("v");
-      if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}`;
-      }
-
-      return url;
-    } catch {
-      return url;
-    }
+  const getContent = async () => {
+    const materials = await fetchMaterial(course_id, dbUser.user_id);
+    const completedIds = materials
+  .filter(mat => !mat.islocked)
+  .map(mat => mat.material_id);
+   setCompletedSet(new Set(completedIds));
+    setContent(materials);
+    setLoaded(true);
   };
 
-  const embedUrl = getEmbedUrl(url);
+  getContent();
+}, [course_id, dbUser.user_id]);
+
+
+
+const handleCompletion = async (matId) => {
+  if (!isEnrolled(course_id)) {
+    alert("You must enroll first!");
+    return;
+  }
+
+
+  const material = content.find(m => m.material_id === matId);
+  if (material.islocked) {
+    alert("This material is locked. Complete the previous one first.");
+    return;
+  }
+
+
+  const res = await fetch(`${baseUrl}/materials/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ studentId: dbUser.user_id, matId }),
+  });
+
+  const data = await res.json();
+
+  if (data.inserted) {
+    const updated = await fetchMaterial(course_id, dbUser.user_id);
+    setContent(updated);
+  }
+  
+  
+};
+  useEffect(()=>{
+    if (!setbuttonState) return;
+    const allUnlocked = content.every(mat => mat.islocked === false);
+if (allUnlocked) {
+  setbuttonState(true);
+} else {
+  setbuttonState(false);
+}
+  },[content])
+
+
+
+  if (!loaded || !dbUser) {
+
+    return <Loading></Loading>;
+  }
   return (
-    <div className="mt-17 md:mt-10">
-      {
-        islocked ? 
-        <div className="container mx-auto p-6 text-center">
-      <h2 className="text-xl font-bold mb-4">Content Locked</h2>
-      <p>You cannot watch this video until you unlock it by completing previous materials or enrolling.</p>
+    <div>
+      {content.length == 0 ? (
+        <div className="flex items-center">
+          {" "}
+          <h1 className="text-xl font-bold text-gray-500">Upcoming</h1>
+        </div>
+      ) : (
+        <div className="flex flex-col">
+          {content.map((material, idx) => (
+            <NavLink
+              key={idx}
+              to={`/content/${course_id}/${material.material_id}`}
+              onClick={()=>handleCompletion(material.material_id)}
+              className={({ isActive }) =>
+                `flex justify-between items-center p-4 md:px-8 border border-gray-400 ${
+                  isActive
+                    ? "bg-[#F2EEEC] border-orange-900 font-semibold *:text-[#B14E0F]"
+                    : "bg-gray-200"
+                }`
+              }
+            >
+              <div className="flex gap-4">
+                {material.type === "video" ? <FaVideo /> : <FaFilePdf />}
+                <h4>{material.title}</h4>
+              </div>
+              <div className="flex gap-4">
+                {(material?.islocked && !completedSet.has(material.material_id)) ? <FaLock /> : <FaLockOpen />}
+                {material.type === "video" ? <FaPlay /> : <FaQuestion />}
+              </div>
+            </NavLink>
+          ))}
+        </div>
+      )}
     </div>
-        :
-        <div>
-        <iframe
-          className="w-screen h-[75vh] z-0"
-          width="560"
-          height="315"
-          src={embedUrl}
-          title="YouTube video"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </div>
-      }
-      <div className='container mx-auto px-4 md:px-8'>
-        <Tabs>
-          <TabList className="flex flex-wrap gap-0 border-b border-gray-200 items-center justify-center">
-            {["Course Content", "Overview", "Discussion", "Quiz"].map((title, idx) => (
-              <Tab
-                key={idx}
-                className="cursor-pointer py-2 px-4 border border-gray-300 bg-gray-100 hover:bg-[#f0b086] react-tabs__tab"
-                selectedClassName="!bg-[#F2EEEC] border-b-0 !border-[#B14E0F] font-semibold text-[#B14E0F]"
-              >
-                {title}
-              </Tab>
-
-            ))}
-          </TabList>
-
-          <TabPanel >
-            <div className='my-10 max-w-3/4 mx-auto'>
-              <h2 className="text-xl font-semibold mb-2">Course Content</h2>
-              <CourseContent course_id={params?.courseId} setbuttonState={setbuttonState}></CourseContent>
-            </div>
-          </TabPanel>
-          <TabPanel >
-            <h2 className="text-xl font-semibold mb-2">Overview</h2>
-            <p>This section contains a general overview of the course.</p>
-          </TabPanel>
-          {/* <TabPanel>
-            <h2 className="text-xl font-semibold mb-2">Discussion</h2>
-            <p>Students and instructors can ask/answer questions here.</p>
-          </TabPanel> */}
-           <TabPanel>
-            <Discussion courseId={course_id} currentUser={dbUser.user_id} />
-          </TabPanel>
-          <TabPanel>
-           <ChooseQuizPage></ChooseQuizPage>
-          </TabPanel>
-        </Tabs>
-      </div>
-      <div className='container mx-auto flex justify-end px-4 md:px-50'>
-        <button className={`btn ${!buttonState ? `disabled bg-amber-900/50` : `Enabled bg-amber-200`}`}>Complete</button>
-      </div>
-    </div>
-
   );
 };
 

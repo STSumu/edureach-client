@@ -1,5 +1,5 @@
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Banner = () => {
   const location=useLocation();
@@ -12,7 +12,8 @@ const Banner = () => {
       <p className="py-6 font-semibold">
         Learn the skills that move you forward. Whether it's coding, communication, or creative thinking, our expert-led courses help you build real knowledge at your pace. No pressure, just progress—anytime, anywhere.
       </p>
-      <button className="btn bg-[#A75A44] text-bold text-white text-lg rounded-lg ">Get Started</button>  
+      <Link to='/courses'><button className="btn bg-[#A75A44] text-bold text-white text-lg rounded-lg ">Get Started</button>  
+</Link>
   </div>
   <div className="-mask-linear-60 mask-linear-from-80% mask-linear-to-100% w-full md:w-1/2">
     <DotLottieReact
