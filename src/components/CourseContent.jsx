@@ -8,7 +8,7 @@ import { EnrollContext } from "../context/EnrollmentProvider";
 import useFetch from "../functions/fetch";
 
 
-const CourseContent = ({ course_id,setbuttonState}) => {
+const CourseContent = ({ course_id}) => {
   const [content, setContent] = useState([]);
   const { dbUser,baseUrl } = useContext(authContext);
   const [loaded, setLoaded] = useState(false);
@@ -32,45 +32,8 @@ const CourseContent = ({ course_id,setbuttonState}) => {
 
 
 
-const handleCompletion = async (matId) => {
-  if (!isEnrolled(course_id)) {
-    alert("You must enroll first!");
-    return;
-  }
 
 
-  const material = content.find(m => m.material_id === matId);
-  if (material.islocked) {
-    alert("This material is locked. Complete the previous one first.");
-    return;
-  }
-
-
-  const res = await fetch(`${baseUrl}/materials/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ studentId: dbUser.user_id, matId }),
-  });
-
-  const data = await res.json();
-
-  if (data.inserted) {
-    const updated = await fetchMaterial(course_id, dbUser.user_id);
-    setContent(updated);
-  }
-  
-  
-};
-  useEffect(()=>{
-    if (!setbuttonState) return;
-    const allUnlocked = content.every(mat => mat.islocked === false);
-    console.log(allUnlocked);
-if (allUnlocked) {
-  setbuttonState(true);
-} else {
-  setbuttonState(false);
-}
-  },[])
 
 
 
@@ -91,7 +54,6 @@ if (allUnlocked) {
             <NavLink
               key={idx}
               to={`/content/${course_id}/${material.material_id}`}
-              onClick={()=>handleCompletion(material.material_id)}
               className={({ isActive }) =>
                 `flex justify-between items-center p-4 md:px-8 border border-gray-400 ${
                   isActive

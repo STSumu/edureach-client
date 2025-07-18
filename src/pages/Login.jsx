@@ -24,12 +24,16 @@ const Login = () => {
           text: `Welcome ${result.user?.displayName || " "}`,
           draggable: true,
         });
-        e.reset();
+        e.target.reset();
         navigate(location.state?.from?.pathname || '/');
         
       })
       .catch((err) => {
-        alert(err.message);
+        Swal.fire({
+    icon: "error",
+    title: "Login Failed",
+    text: err.message,
+  });
       });
   };
   return (

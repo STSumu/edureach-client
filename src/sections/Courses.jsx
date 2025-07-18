@@ -33,7 +33,13 @@ const Courses = () => {
                 // onSwiper={(swiper) => console.log(swiper)}
                 // onSlideChange={() => console.log('slide change')}
             >
-                {
+                {courses.length===0 ?
+                   <div className='flex justify-center items-center'>
+                    <h1 className='text-4xl text-gray-500'>
+                        No courses to show.
+                    </h1>
+                   </div>
+                   :
                     courses.slice(0, 6).map((course, idx) =>
                         <SwiperSlide key={idx} >
                             <div className="pt-6 pb-6"> {/* simulate vertical offset */}
