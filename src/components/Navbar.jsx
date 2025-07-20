@@ -9,7 +9,6 @@ import { authContext } from "../context/AuthProvider";
 import Swal from "sweetalert2";
 
 const Navbar = () => {
-
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   
-  const { user, logOut} = useContext(authContext);
+  const { user, logOut,dbUser} = useContext(authContext);
  const [search, setSearch] = useState("");
 const navigate = useNavigate();
 
@@ -165,7 +164,12 @@ const navigate = useNavigate();
         {user ? (
           <div className="dropdown dropdown-end text-black">
             <div tabIndex={0} role="button" className="text-2xl text-gray-600 hover:text-black transition duration-200">
-          <FaUserCircle />
+            {
+              dbUser?.profile_pic ?
+               <img className="w-6 h-6 rounded-full" src={dbUser.profile_pic}></img> 
+               :
+               <FaUserCircle />
+            }
 
             </div>
             <ul
@@ -174,14 +178,16 @@ const navigate = useNavigate();
             >
               <li className="border-b-1 border-gray-300">
                 <div className="flex gap-2 items-center">
+                  {dbUser?.profile_pic ? <img className="w-6 h-6 rounded-full" src={dbUser.profile_pic}></img>
+                  :
                   <div className="bg-amber-900 rounded-full w-6 h-6 text-white flex items-center justify-center text-sm">
-                    {user.photoURL ||
-                      user?.displayName
+                    {user?.displayName
                         ?.split(" ")
                         .map((word) => word[0].toUpperCase())
                         .join("") ||
                       user?.email?.trim()[0].toUpperCase()}
                   </div>
+                  }
                   <div>
                     <h5 className="font-semibold">{user.displayName}</h5>
                     <p className="text-xs text-gray-500">{user.email}</p>
@@ -207,7 +213,8 @@ const navigate = useNavigate();
         ) : (
           <Link
             to="/auth/login"
-            className="btn bg-[#B14E0F] hidden md:flex text-white text-lg rounded-lg"
+            className="btn bg-[#B14E0F]
+            border-0 shadow-lg hidden md:flex text-white text-lg rounded-lg"
           >
             Login
           </Link>

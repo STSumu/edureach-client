@@ -16,7 +16,18 @@ const EnrollmentProvider = ({children}) => {
             setEnLoad(true);
           })
           }
-     },[dbUser])
+     },[dbUser]);
+    const refreshEnrollments = async () => {
+  if (!dbUser) return;
+  try {
+    const res = await fetch(`${baseUrl}/enroll/${dbUser.user_id}`);
+    const data = await res.json();
+    setEnroll(data.mycourses ?? []);
+  } catch (err) {
+    console.error("Failed to refresh enrollments", err);
+  }
+};
+
     const isEnrolled=(courseId)=>{
         if (!Array.isArray(enroll)) return false;
         if(enroll.includes(Number(courseId))){
@@ -31,6 +42,7 @@ const EnrollmentProvider = ({children}) => {
         enroll,
         enLoad,
         isEnrolled,
+        refreshEnrollments,
     }
     return (
         <EnrollContext.Provider value={enrollInfo}>

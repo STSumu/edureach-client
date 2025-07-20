@@ -5,7 +5,7 @@ import { authContext } from "../context/AuthProvider";
 import Swal from "sweetalert2";
 
 const Login = () => {
-  const { emaillogin ,setUser} = useContext(authContext);
+  const { emaillogin ,setUser,baseUrl,googlelogin} = useContext(authContext);
   const location=useLocation();
   const navigate=useNavigate();
 
@@ -36,6 +36,57 @@ const Login = () => {
   });
       });
   };
+
+  const handleGoogleLogin = (role) => {
+      
+      googlelogin()
+        .then(async(result) => {
+          const googleUser = result.user;
+    // Check if user exists in your DB
+    const res = await fetch(`${baseUrl}/user/${googleUser.email}`);
+    const data = await res.json();
+          setUser(result.user);
+          const name = result.user.displayName;
+          const email = result.user.email;
+          const profilePic = result.user.photoURL;
+          const reg_date = result.user.metadata.creationTime;
+          const lastLogin = result.user.metadata.lastSignInTime;
+          const user = {
+            name,
+            email,
+            profilePic,
+            reg_date,
+            lastLogin,
+            role: role.toLowerCase(),
+          };
+          if(!data){
+            fetch(`${baseUrl}/user`, {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(user),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.insertedId) {
+                Swal.fire({
+                  title: "Sucess",
+                  icon: "success",
+                  text:"User created Successfully",
+                  confirmButtonText: 'OK',
+                })
+                document.getElementById("my_modal_1").close();
+              }
+            });
+          }
+          navigate(location.state?.from?.pathname || '/');
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("Google login failed");
+        });
+    };
   return (
     <div className="flex flex-col-reverse pt-20 md:pt-6 md:flex-row justify-between items-center px-3 md:pr-15 lg:pr-35">
       <div className="w-full md:w-1/2">
@@ -80,9 +131,30 @@ const Login = () => {
             Register
           </Link>
         </p>
-        <button className="btn   bg-[#A75A44] w-full text-base text-white">
+        <button onClick={() => document.getElementById("my_modal_1").showModal()} className="btn   bg-[#A75A44] w-full text-base text-white">
           Log in with Google
         </button>
+         <dialog id="my_modal_1" className="modal text-center">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Sign In as </h3>
+            <div className="modal-action justify-center flex flex-col">
+              <form method="dialog" className="flex flex-col gap-4">
+                <button
+                  className="btn"
+                  onClick={() => handleGoogleLogin("teacher")}
+                >
+                  Teacher
+                </button>
+                <button
+                  className="btn"
+                  onClick={() => handleGoogleLogin("student")}
+                >
+                  Student
+                </button>
+              </form>
+            </div>
+          </div>
+        </dialog>
       </div>
     </div>
   );
