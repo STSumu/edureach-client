@@ -24,7 +24,6 @@ const AuthProvider = ({children}) => {
         .then(res=>res.json())
         .then(data=>{
             setCourses(data);
-            setLoading(false);
         })
     },[])
 
@@ -63,7 +62,6 @@ const AuthProvider = ({children}) => {
     useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
     setUser(currentUser);
-    setLoading(false);
 
     if (currentUser?.email) {
       try {
@@ -74,9 +72,9 @@ const AuthProvider = ({children}) => {
         console.error("Error fetching user from DB:", err);
       }
     } else {
-      setLoading(true);
       setDbUser(null);
     }
+    setLoading(false);
   });
 
   return () => unsubscribe();
