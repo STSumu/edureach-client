@@ -16,7 +16,7 @@ const EnrolledRoute = ({children}) => {
     const userId=dbUser?.user_id;
     const [redirect, setRedirect] = React.useState(false);
     const courseId=param.courseId;
-    
+    const isQuizPage = location.pathname.includes('/enrolled/quiz');
   useEffect(() => {
     if (enLoad && dbUser && !enroll.includes(Number(courseId))) {
       Swal.fire({
@@ -45,10 +45,10 @@ const EnrolledRoute = ({children}) => {
 
 
     
-    if (!enLoad || !dbUser || !courseId) {
+    if (!isQuizPage && (!enLoad || !dbUser || !courseId)) {
   return <Loading />;
 }
-    if(enroll.includes(Number(courseId))){
+    if(isQuizPage || enroll.includes(Number(courseId))){
        return children;
     }
     if(redirect){

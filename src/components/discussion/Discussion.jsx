@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import ThreadList from './ThreadList';
 import ThreadView from './ThreadView';
 import CreateThread from './CreateThread';
-import { authContext } from '../context/AuthProvider';
-import Loading from './Loading';
+import { authContext } from '../../context/AuthProvider';
+import Loading from '../Loading';
 
 const Discussion = ({ courseId, currentUser }) => {
     const {baseUrl}=useContext(authContext);

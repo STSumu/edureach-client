@@ -28,7 +28,7 @@ const Material = ({ course_id,setbuttonState}) => {
   };
 
   getContent();
-}, [course_id, dbUser.user_id]);
+}, [course_id, dbUser.user_id,fetchMaterial]);
 
 
 
@@ -69,7 +69,7 @@ if (allUnlocked) {
 } else {
   setbuttonState(false);
 }
-  },[content])
+  },[content,setbuttonState])
 
 
 
@@ -89,7 +89,7 @@ if (allUnlocked) {
           {content.map((material, idx) => (
             <NavLink
               key={idx}
-              to={`/content/${course_id}/${material.material_id}`}
+              to={`/enrolled/${course_id}/${material.material_id}`}
               onClick={()=>handleCompletion(material.material_id)}
               className={({ isActive }) =>
                 `flex justify-between items-center p-4 md:px-8 border border-gray-400 ${

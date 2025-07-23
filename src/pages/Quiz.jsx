@@ -17,6 +17,7 @@ const Quiz = () => {
 
   const { dbUser, baseUrl } = useContext(authContext);
   const navigate = useNavigate();
+  console.log(quizId);
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -337,7 +338,7 @@ const Quiz = () => {
   const marksPerQuestion = totalMarks / questions.length;
 
   return (
-    <div className="quiz-container mt-20">
+    <div className="quiz-container my-20">
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
         
         {/* Header */}

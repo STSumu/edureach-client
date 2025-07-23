@@ -1,7 +1,7 @@
 import Courses from '../sections/Courses';
-import BlueBox from '../components/BlueBox.jsx'
-import Chooseus from '../components/Chooseus.jsx'            
 import Banner from '../components/Banner.jsx';
+import Chooseus from './../sections/Chooseus';
+import BlueBox from '../sections/BlueBox.jsx';
 
 const Home = () => {
     return (

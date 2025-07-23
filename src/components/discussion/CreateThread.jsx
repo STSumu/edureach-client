@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { authContext } from '../context/AuthProvider';
+import { authContext } from '../../context/AuthProvider';
 
 const CreateThread = ({ courseId, currentUser, onBack, onThreadCreated }) => {
   const {baseUrl}=useContext(authContext);

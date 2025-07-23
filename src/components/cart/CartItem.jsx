@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { FiTrash, FiHeart } from "react-icons/fi";
-import { authContext } from "../context/AuthProvider";
-import Loading from "./Loading";
-import useAddtoList from "../functions/addToList";
+import { authContext } from "../../context/AuthProvider";
+import Loading from "../Loading";
+import useAddtoList from "../../functions/addToList";
 
 const CartItem = ({ courseId,handleRemove }) => {
   const {handleAddWishList}=useAddtoList();

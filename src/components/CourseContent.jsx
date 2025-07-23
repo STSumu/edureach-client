@@ -53,7 +53,7 @@ const CourseContent = ({ course_id}) => {
           {content.map((material, idx) => (
             <NavLink
               key={idx}
-              to={`/content/${course_id}/${material.material_id}`}
+              to={`/enrolled/${course_id}/${material.material_id}`}
               className={({ isActive }) =>
                 `flex justify-between items-center p-4 md:px-8 border border-gray-400 ${
                   isActive
