@@ -3,10 +3,12 @@ import { Outlet } from 'react-router-dom';
 import EnrollNav from '../components/enrolled/EnrollNav';
 import Footer from '../components/Footer';
 
+
 const EnrollLayout = () => {
     return (
         <>
         <header>
+
             <EnrollNav>
 
             </EnrollNav>
@@ -17,8 +19,9 @@ const EnrollLayout = () => {
         <footer>
             <Footer></Footer>
         </footer>
+
         </>
-    );
+    )
 };
 
 export default EnrollLayout;

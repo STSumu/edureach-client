@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { authContext } from '../context/AuthProvider';
 import Loading from '../components/Loading';
 import Swal from 'sweetalert2';
+import { EnrollContext } from '../context/EnrollmentProvider';
 
 const Payment = () => {
     const { baseUrl, dbUser } = useContext(authContext);
     const [payment, setPayment] = useState([]);
+    const { refreshEnrollments } = useContext(EnrollContext);
     const navigate = useNavigate();
     useEffect(() => {
         fetch(`${baseUrl}/pay/${dbUser.user_id}`)
@@ -63,7 +65,8 @@ const Payment = () => {
                                 animate__faster`
                         }
                     })
-                        .then(() => {
+                        .then(async() => {
+                            await refreshEnrollments();
                             fetch(`${baseUrl}/cart/clear`, {
                                 method: 'DELETE',
                                 body: JSON.stringify({ stdId: dbUser.user_id }),

@@ -53,8 +53,13 @@ const Register = () => {
       });
   };
   const handleGoogleLogin = (role) => {
+    
     googlelogin()
-      .then((result) => {
+      .then(async(result) => {
+        const googleUser = result.user;
+  // Check if user exists in your DB
+  const res = await fetch(`${baseUrl}/user/${googleUser.email}`);
+  const data = await res.json();
         setUser(result.user);
         const name = result.user.displayName;
         const email = result.user.email;
@@ -69,7 +74,8 @@ const Register = () => {
           lastLogin,
           role: role.toLowerCase(),
         };
-        fetch(`${baseUrl}/user`, {
+        if(!data){
+          fetch(`${baseUrl}/user`, {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -79,10 +85,17 @@ const Register = () => {
           .then((res) => res.json())
           .then((data) => {
             if (data.insertedId) {
-              alert("User created");
+              Swal.fire({
+                title: "Sucess",
+                icon: "success",
+                text:"User created Successfully",
+                confirmButtonText: 'OK',
+              })
               document.getElementById("my_modal_1").close();
             }
           });
+        }
+        navigate(location.state?.from?.pathname || '/');
       })
       .catch((err) => {
         console.error(err);
