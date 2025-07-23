@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Thread = ({threads}) => {
-    const 
     return (
         <div>
             

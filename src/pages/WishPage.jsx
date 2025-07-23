@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { authContext } from '../context/AuthProvider';
 import { Link } from 'react-router-dom';
-import WishItem from '../components/WishItem';
 import useAddtoList from '../functions/addToList';
+import WishItem from './../components/cart/WishItem';
 
 const WishPage = () => {
     const [wish,setWish]=useState([]);

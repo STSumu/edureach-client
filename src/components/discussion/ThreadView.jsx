@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import PostItem from './PostItem';
-import ReplyForm from './ReplyForm';
+import PostItem from '../PostItem';
+import ReplyForm from '../ReplyForm';
 
 const ThreadView = ({threadId}) => {
     console.log(threadId);

@@ -1,12 +1,12 @@
 
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { useContext, useState, useEffect } from "react";
-import { authContext } from "../context/AuthProvider";
 import Swal from "sweetalert2";
+import { authContext } from "../../context/AuthProvider";
 
-const Navbar = () => {
+const EnrollNav = () => {
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -46,50 +46,11 @@ const navigate = useNavigate();
     }
   };
 
-  const links = (
-    <>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
-      <li>
-        <NavLink to="/dashboard">Dashboard</NavLink>
-      </li>
-      <li>
-        <NavLink to="/courses">Courses</NavLink>
-      </li>
-      <li>
-        <NavLink to="/profile">Profile</NavLink>
-      </li>
-    </>
-  );
+  
 
   return (
-    <div className={`navbar z-10 ${scrolled ? 'bg-[#A75A44]': 'bg-transparent'} px-2 md:px-8 lg:px-25 shadow-sm fixed`}>
+    <div className={`navbar z-10 ${scrolled ? 'bg-[#A75A44]': 'bg-transparent'} px-2 md:px-8  shadow-sm fixed`}>
       <div className="navbar-start">
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden text-black">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
-            </svg>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow space-y-2"
-          >
-            {links}
-          </ul>
-        </div>
 
         {/* Brand */}
         <div className="flex flex-col leading-none ml-1">
@@ -109,62 +70,21 @@ const navigate = useNavigate();
       </div>
 
       <div className="navbar-center hidden lg:flex">
-        <ul className={`menu menu-horizontal ${scrolled && 'text-white'} px-1 space-x-4`}>{links}</ul>
+
       </div>
 
       <div className="navbar-end flex items-center ml-auto space-x-4 pr-4 text-black">
-        {/* ✅ SEARCH BAR */}
-       <form onSubmit={handleSearch} className="relative hidden md:flex">
-  <label className="input">
-    <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.3-4.3"></path>
-      </g>
-    </svg>
-    <input
-      type="search"
-      className="grow"
-      placeholder="Search"
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-    />
-  </label>
-</form>
 
-
-        {/* Icon for mobile (optional) */}
-        <svg
-          className="h-6 opacity-50 md:hidden"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-        >
-          <g
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            strokeWidth="2.5"
-            fill="none"
-            stroke="currentColor"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
-          </g>
-        </svg>
-
-        {/* Cart & User */}
-        <Link
-          to={`/cart`}
-          className="text-gray-600 hover:text-black transition duration-200 text-2xl hidden md:flex"
-          title="Go to Cart"
-        >
-          <FaShoppingCart />
-        </Link>
 
         {user ? (
           <div className="dropdown dropdown-end text-black">
-            <div tabIndex={0} role="button" className="text-2xl text-gray-600 hover:text-black transition duration-200">
-          <FaUserCircle />
-
+            <div tabIndex={0} role="button" className="w-12 h-12">
+         <lord-icon
+      src="https://cdn.lordicon.com/hroklero.json"
+      trigger="hover"
+      colors="primary:#c74b16,secondary:#ffc738"
+      className='w-full h-full'
+    ></lord-icon>
             </div>
             <ul
               tabIndex={0}
@@ -215,4 +135,4 @@ const navigate = useNavigate();
   );
 };
 
-export default Navbar;
+export default EnrollNav;

@@ -5,9 +5,9 @@ import Loading from '../components/Loading';
 import CourseContent from '../components/CourseContent';
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import Discussion from '../components/Discussion';
-import QuizPage from '../components/QuizPage';
-import ChooseQuizPage from '../components/ChooseQuiz';
+import Discussion from '../components/discussion/Discussion';
+import QuizPage from '../components/quiz/QuizPage';
+import ChooseQuizPage from '../components/quiz/ChooseQuiz';
 import Material from './Material';
 
 const EnrolledCourse = () => {
@@ -51,7 +51,7 @@ const EnrolledCourse = () => {
 
   const embedUrl = getEmbedUrl(url);
   return (
-    <div className="mt-17 md:mt-10">
+    <div className="">
       {
         islocked ? 
         <div className="container mx-auto p-6 text-center">
@@ -61,7 +61,7 @@ const EnrolledCourse = () => {
         :
         <div>
         <iframe
-          className="w-screen h-[75vh] z-0"
+          className="w-full h-[75vh] z-0"
           width="560"
           height="315"
           src={embedUrl}

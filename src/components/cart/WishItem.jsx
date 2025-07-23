@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { authContext } from '../context/AuthProvider';
+import { authContext } from '../../context/AuthProvider';
 import { FaShoppingBag, FaShoppingBasket, FaShoppingCart } from 'react-icons/fa';
 import { FiTrash } from 'react-icons/fi';
-import useAddtoList from '../functions/addToList';
+import useAddtoList from '../../functions/addToList';
 
 const WishItem = ({ wishitem, handleRemove }) => {
   const { course_id } = wishitem;

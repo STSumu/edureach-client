@@ -17,13 +17,12 @@ const ChooseQuizPage = () => {
   }, [courseId]);
 
   const handleChoose = (quizId) => {
-    navigate(`/quiz/${quizId}`);
+    navigate(`/enrolled/quiz/${quizId}`);
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#fcf5e5] px-6">
-      <h1 className="text-4xl font-bold text-[#b54343] mb-8">Choose a Quiz</h1>
-
+    <div className="flex flex-col items-center justify-center mt-8 bg-[#fcf5e5] py-16">
+      <h1 className="mb-5 text-4xl font-bold text-[#b54343] ">Choose a Quiz</h1>
       <div className="space-y-4 w-full max-w-md">
         {quizes.map((quizId, index) => (
           <button

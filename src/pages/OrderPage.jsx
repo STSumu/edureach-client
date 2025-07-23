@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
 import { authContext } from '../context/AuthProvider';
-import OrderItem from '../components/OrderItem';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Loading from '../components/Loading';
 import Swal from 'sweetalert2';
+import OrderItem from './../components/cart/OrderItem';
 
 
 const OrderPage = () => {

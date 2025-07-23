@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import CountUp from "react-countup";
-import { authContext } from './../context/AuthProvider';
-import Loading from "./Loading";
+import { authContext } from '../context/AuthProvider';
+import Loading from "../components/Loading";
 
 const BlueBox = () => {
   const [users, setUsers] = useState([]);

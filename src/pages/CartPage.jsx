@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import CartItem from '../components/CartItem';
 import { authContext } from '../context/AuthProvider';
 import useAddtoList from '../functions/addToList';
 import { FaArrowRight } from 'react-icons/fa';
+import CartItem from './../components/cart/CartItem';
 
 
 

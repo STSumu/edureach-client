@@ -7,7 +7,6 @@ import AuthLayout from "../layouts/AuthLayout";
 import Error from "../pages/Error";
 import AllCourse from "../pages/AllCourse";
 import CourseDetails from "../components/CourseDetails";
-import CartItem from "../components/CartItem";
 import PrivateRoute from "../routes/PrivateRoute";
 import SearchResults from "../pages/SearchResults";
 import CartPage from "../pages/CartPage";
@@ -15,12 +14,12 @@ import WishPage from "../pages/WishPage";
 import Dashboard from "../pages/Dashboard";
 import EnrolledRoute from "./EnrolledRoute";
 import EnrolledCourse from "../pages/EnrolledCourse";
-import Material from "../pages/Material";
 import OrderPage from "../pages/OrderPage";
 import Payment from "../pages/Payment";
 import MyCourses from "../pages/MyCourses";
 import Quiz from "../pages/Quiz";
 import CertificatePage from "../pages/CertificatePage";
+import EnrollLayout from "../layouts/EnrollLayout";
 
 export const router = createBrowserRouter([
   {
@@ -56,14 +55,7 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      {
-        path: "/content/:courseId/:matId",
-        element: (
-          <EnrolledRoute>
-            <EnrolledCourse></EnrolledCourse>
-          </EnrolledRoute>
-        ),
-      },
+      
       {
         path: "/cart",
         element: (
@@ -93,15 +85,26 @@ export const router = createBrowserRouter([
         ),
       },
       { path: "/search", element: <SearchResults /> },
-      {
-        path:'/quiz/:quizId',
-        element:<Quiz></Quiz>
-      },
+      
       {
         path:'/complete/:courseId',
         element:<PrivateRoute><CertificatePage></CertificatePage></PrivateRoute>
       }
     ],
+  },
+  {
+    path:'/enrolled',
+    element:<EnrolledRoute><EnrollLayout></EnrollLayout></EnrolledRoute>,
+    children:[
+      {
+        path: ":courseId/:matId",
+        element: <EnrolledCourse></EnrolledCourse>,
+      },
+      {
+        path:'quiz/:quizId',
+        element:<Quiz></Quiz>
+      },
+    ]
   },
   {
     path: "/auth",
