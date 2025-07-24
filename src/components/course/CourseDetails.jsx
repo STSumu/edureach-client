@@ -1,18 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { FaArrowLeft, FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { authContext } from "../context/AuthProvider";
+import { authContext } from "../../context/AuthProvider";
 import Rating from "./Rating";
 import { MdUpdate } from "react-icons/md";
 import { IoIosPhonePortrait } from "react-icons/io";
 import { CiTrophy } from "react-icons/ci";
 import { GiDuration } from "react-icons/gi";
-import Loading from "./Loading";
+import Loading from "../Loading";
 import CourseContent from "./CourseContent";
-import useAddtoList from "../functions/addToList";
-import { EnrollContext } from "../context/EnrollmentProvider";
-import Material from "../pages/Material";
-import useFetch from "../functions/fetch";
+import useAddtoList from "../../functions/addToList";
+import { EnrollContext } from "../../context/EnrollmentProvider";
+import Material from "../../pages/Material";
+import useFetch from "../../functions/fetch";
 
 const CourseDetails = () => {
   const { baseUrl, dbUser, loading } = useContext(authContext);

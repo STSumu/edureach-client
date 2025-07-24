@@ -6,7 +6,6 @@ import Home from "../pages/Home";
 import AuthLayout from "../layouts/AuthLayout";
 import Error from "../pages/Error";
 import AllCourse from "../pages/AllCourse";
-import CourseDetails from "../components/CourseDetails";
 import PrivateRoute from "../routes/PrivateRoute";
 import SearchResults from "../pages/SearchResults";
 import CartPage from "../pages/CartPage";
@@ -17,9 +16,11 @@ import EnrolledCourse from "../pages/EnrolledCourse";
 import OrderPage from "../pages/OrderPage";
 import Payment from "../pages/Payment";
 import MyCourses from "../pages/MyCourses";
-import Quiz from "../pages/Quiz";
 import CertificatePage from "../pages/CertificatePage";
 import EnrollLayout from "../layouts/EnrollLayout";
+import QuizPage from "../components/quiz/QuizPage";
+import QuizResults from "../components/quiz/QuizResults";
+import CourseDetails from "../components/course/CourseDetails";
 
 export const router = createBrowserRouter([
   {
@@ -93,7 +94,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path:'/enrolled',
+    path:'/enrolled/',
     element:<EnrolledRoute><EnrollLayout></EnrollLayout></EnrolledRoute>,
     children:[
       {
@@ -102,8 +103,16 @@ export const router = createBrowserRouter([
       },
       {
         path:'quiz/:quizId',
-        element:<Quiz></Quiz>
+        element:<QuizPage></QuizPage>
       },
+      {
+        path:'quiz/result/:quizId',
+        element:<QuizResults></QuizResults>
+      },
+      {
+        path:'certificate/:courseId',
+        element:<CertificatePage></CertificatePage>
+      }
     ]
   },
   {

@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { authContext } from "../context/AuthProvider";
-import Course from "../components/Course";
+import Course from "../components/course/Course";
+
 
 const SearchResults = () => {
   const { courses } = useContext(authContext);

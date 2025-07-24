@@ -5,7 +5,6 @@ import { authContext } from '../context/AuthProvider';
 import Loading from '../components/Loading';
 import { EnrollContext } from '../context/EnrollmentProvider';
 import Swal from 'sweetalert2';
-import CourseContent from '../components/CourseContent';
 import useAddtoList from '../functions/addToList';
 
 const EnrolledRoute = ({children}) => {

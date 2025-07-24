@@ -1,15 +1,19 @@
 
 import logo from "../../assets/logo.png";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { authContext } from "../../context/AuthProvider";
+import Progress from "../course/Progress";
+import Rate from "../course/Rate";
 
-const EnrollNav = () => {
-
+const EnrollNav = ({courseId}) => {
+  
   const [scrolled, setScrolled] = useState(false);
-
+  const {courses} =useContext(authContext);
+  const course=courses.find((c)=>c.course_id=== Number(courseId));
+  
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -50,10 +54,10 @@ const navigate = useNavigate();
 
   return (
     <div className={`navbar z-10 ${scrolled ? 'bg-[#A75A44]': 'bg-transparent'} px-2 md:px-8  shadow-sm fixed`}>
-      <div className="navbar-start">
+      <div className="navbar-start ">
 
         {/* Brand */}
-        <div className="flex flex-col leading-none ml-1">
+        <div className="flex flex-col leading-none ml-1 border-r-2 border-[#A75A44] pr-5 md:pr-10">
           <div className="flex items-center gap-2">
             <img src={logo} alt="Logo" className="w-8 h-8 mt-[16px]" />
             <Link
@@ -67,15 +71,16 @@ const navigate = useNavigate();
             E-Learning System
           </span>
         </div>
+        <h1 className="pl-5 md:pl-10 text-2xl hidden md:flex">{course.course_name}</h1>
       </div>
 
       <div className="navbar-center hidden lg:flex">
-
+       
       </div>
 
       <div className="navbar-end flex items-center ml-auto space-x-4 pr-4 text-black">
-
-
+        <Rate courseId={courseId}></Rate>
+        <Progress courseId={courseId}></Progress>
         {user ? (
           <div className="dropdown dropdown-end text-black">
             <div tabIndex={0} role="button" className="w-12 h-12">
