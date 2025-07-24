@@ -18,9 +18,11 @@ import Payment from "../pages/Payment";
 import MyCourses from "../pages/MyCourses";
 import CertificatePage from "../pages/CertificatePage";
 import EnrollLayout from "../layouts/EnrollLayout";
+import CourseRequestPage from "../components/CourseRequestPage";
 import QuizPage from "../components/quiz/QuizPage";
 import QuizResults from "../components/quiz/QuizResults";
 import CourseDetails from "../components/course/CourseDetails";
+
 
 export const router = createBrowserRouter([
   {
@@ -90,10 +92,17 @@ export const router = createBrowserRouter([
       {
         path:'/complete/:courseId',
         element:<PrivateRoute><CertificatePage></CertificatePage></PrivateRoute>
-      }
+      },
+      
     ],
   },
   {
+        path: "/course_request",
+        element: <CourseRequestPage></CourseRequestPage>
+  },
+ 
+  {
+    
     path:'/enrolled/',
     element:<EnrolledRoute><EnrollLayout></EnrollLayout></EnrolledRoute>,
     children:[
