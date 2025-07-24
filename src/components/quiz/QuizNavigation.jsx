@@ -27,7 +27,7 @@ const QuizNavigation = ({
       {currentIndex === totalQuestions - 1 ? (
         <button
           onClick={handleSubmit}
-          className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700 font-semibold"
+          className="px-4 py-2 rounded text-white bg-[#B14E0F] hover:bg-[#B14E0F]/50 font-semibold"
         >
           Submit Quiz
         </button>

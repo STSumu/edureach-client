@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import Course from '../components/Course';
 import { authContext } from '../context/AuthProvider';
 import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { Autoplay, Navigation, Pagination, Scrollbar } from 'swiper/modules';
+import Course from '../components/course/Course';
 
 
 const Courses = () => {

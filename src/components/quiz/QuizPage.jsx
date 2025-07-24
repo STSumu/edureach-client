@@ -1,103 +1,113 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import QuizResults from "./QuizResults";
 import QuizHeader from "./QuizHeader";
 import QuestionCard from "./QuestionCard";
 import QuizNavigation from "./QuizNavigation";
 import { authContext } from "../../context/AuthProvider";
+import useFetch from "../../functions/fetch";
+import Swal from "sweetalert2";
 
 
 const QuizPage = () => {
   const { quizId } = useParams();
-  const { baseUrl } = useContext(authContext);
-
+  const { baseUrl,dbUser } = useContext(authContext);
+  const {fetchQuiz}=useFetch();
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedOptions, setSelectedOptions] = useState({});
-  const [showAnswers, setShowAnswers] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-  const [quizResults, setQuizResults] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [totalMarks, setTotalMarks] = useState(0);
+  const navigate=useNavigate();
+  const location=useLocation();
 
   useEffect(() => {
-    const fetchQuiz = async () => {
+  const fetchData = async () => {
       try {
-        setLoading(true);
-        const url = baseUrl ? `${baseUrl}/question/${quizId}` : `/quiz/${quizId}`;
-        const res = await axios.get(url);
-        if (res.data?.length) {
-          setQuestions(res.data);
-          setTotalMarks(res.data[0]?.total_mark || 0);
-        } else {
-          setError("No questions found for this quiz");
-        }
-      } catch (e) {
-        setError(e.response?.data?.message || "Failed to load quiz");
-      } finally {
+        const quizQues = await fetchQuiz(quizId);
+        setQuestions(quizQues);
+        const totalMarks=Number(quizQues[0].total_mark);
+        setTotalMarks(totalMarks);
         setLoading(false);
-      }
-    };
-    if (quizId) fetchQuiz();
-  }, [quizId, baseUrl]);
+      } catch (err) {
+      console.error('Failed to fetch quizzes:', err);
+      setError(err.message);
+      setLoading(false);
+    }
+  }
+  if(quizId){
+    fetchData();
+    
+  }
+}, [quizId, baseUrl]);
 
   const handleOptionSelect = (quesId, optionId) => {
-    if (!showAnswers) {
-      setSelectedOptions((prev) => ({ ...prev, [quesId]: optionId }));
-    }
-  };
+ 
+    setSelectedOptions((prev) => {
+      const updated = [...prev];
+      const existingIndex = updated.findIndex(sel => sel.ques_id === quesId);
 
-  const calculateResults = () => {
-    const marksPerQ = totalMarks / questions.length;
-    let correctCount = 0;
-    const results = questions.map((q) => {
-      const selectedId = selectedOptions[q.ques_id];
-      const correct = q.options.find((o) => o.is_correct);
-      const isCorrect = selectedId === correct?.option_id;
-      if (isCorrect) correctCount++;
-      return {
-        question: q.quiz_text,
-        selectedOption: q.options.find((o) => o.option_id === selectedId)?.option_txt || "No Answer",
-        correctOption: correct?.option_txt,
-        isCorrect,
-        marks: isCorrect ? marksPerQ : 0,
-      };
-    });
-    const totalScore = correctCount * marksPerQ;
-    const percentage = (correctCount / questions.length) * 100;
-    return {
-      correctAnswers: correctCount,
-      totalQuestions: questions.length,
-      totalScore,
-      totalMarks,
-      percentage,
-      marksPerQuestion: marksPerQ,
-      results,
-    };
-  };
+      if (existingIndex !== -1) {
+        updated[existingIndex].option_id = optionId; 
+      } else {
+        updated.push({ ques_id: quesId, option_id: optionId }); 
+      }
+      return updated;
+  })
+  
+  
+};
+
+
 
   const handleSubmit = () => {
-    const results = calculateResults();
-    setQuizResults(results);
-    setShowAnswers(true);
-    setShowResults(true);
+    const submit={
+      studentId:dbUser.user_id,
+      quizId:quizId,
+      answers:selectedOptions,
+    }
+    fetch(`${baseUrl}/quizattempt/submit-quiz`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify(submit),
+    })
+    .then((res) => res.json())
+          .then((data) => {
+            if (data.attempt_id) {
+              Swal.fire({
+                title: 'Successfully submited the quiz.',
+                text: 'See Results',
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'See Results',
+                cancelButtonText: 'Go to Dashboard',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  navigate(`/enrolled/quiz/result/${quizId}`, {
+    state: location.state,
+    replace: true, 
+  });
+                }
+                else{
+                  navigate(`${location.state}`)
+                }
+              });
+            } else {
+              alert('Failed to add to cart.');
+            }
+          });
+    
   };
 
-  const handleRetake = () => {
-    setSelectedOptions({});
-    setCurrentIndex(0);
-    setShowAnswers(false);
-    setShowResults(false);
-    setQuizResults(null);
-  };
+  
 
   if (loading) return <p className="mt-20 text-center">Loading quiz...</p>;
   if (error) return <p className="mt-20 text-center text-red-600">Error: {error}</p>;
   if (!questions.length) return <p className="mt-20 text-center">No questions found.</p>;
-  if (showResults) return <QuizResults quizResults={quizResults} handleRetake={handleRetake} />;
-
+ 
   const currentQuestion = questions[currentIndex];
   const marksPerQuestion = totalMarks / questions.length;
 
@@ -108,7 +118,6 @@ const QuizPage = () => {
         question={currentQuestion}
         selectedOptions={selectedOptions}
         handleOptionSelect={handleOptionSelect}
-        showAnswers={showAnswers}
       />
       <QuizNavigation
         currentIndex={currentIndex}

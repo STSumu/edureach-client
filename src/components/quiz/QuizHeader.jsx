@@ -15,7 +15,7 @@ const QuizHeader = ({ currentIndex, totalQuestions, marksPerQuestion }) => {
       {/* Progress Bar */}
       <div className="w-full h-2 bg-gray-200 rounded">
         <div
-          className="h-2 bg-blue-500 rounded transition-all duration-300"
+          className="h-2 bg-[#B14E0F] rounded transition-all duration-300"
           style={{ width: `${((currentIndex + 1) / totalQuestions) * 100}%` }}
         ></div>
       </div>

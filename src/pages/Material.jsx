@@ -8,7 +8,7 @@ import { EnrollContext } from "../context/EnrollmentProvider";
 import useFetch from "../functions/fetch";
 
 
-const Material = ({ course_id,setbuttonState}) => {
+const Material = ({ course_id}) => {
   const [content, setContent] = useState([]);
   const { dbUser,baseUrl } = useContext(authContext);
   const [loaded, setLoaded] = useState(false);
@@ -33,12 +33,6 @@ const Material = ({ course_id,setbuttonState}) => {
 
 
 const handleCompletion = async (matId) => {
-  if (!isEnrolled(course_id)) {
-    alert("You must enroll first!");
-    return;
-  }
-
-
   const material = content.find(m => m.material_id === matId);
   if (material.islocked) {
     alert("This material is locked. Complete the previous one first.");
@@ -61,15 +55,7 @@ const handleCompletion = async (matId) => {
   
   
 };
-  useEffect(()=>{
-    if (!setbuttonState) return;
-    const allUnlocked = content.every(mat => mat.islocked === false);
-if (allUnlocked) {
-  setbuttonState(true);
-} else {
-  setbuttonState(false);
-}
-  },[content,setbuttonState])
+ 
 
 
 

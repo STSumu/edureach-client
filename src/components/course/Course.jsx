@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { FaUserTie } from 'react-icons/fa';
 import { Link, NavLink } from 'react-router-dom';
 import Rating from './Rating';
-import { EnrollContext } from './../context/EnrollmentProvider';
+import { EnrollContext } from '../../context/EnrollmentProvider';
 
 const Course = ({course}) => {
     const {course_id,category,course_name,rating,instructor,duration,price,thumb_url,instructorImg}=course;
@@ -14,7 +14,7 @@ const Course = ({course}) => {
     }
     },[])
     return (
-        <NavLink to={`${enrolled ? `/enrolled/${course_id}/1`: `/courses/${Number(course_id)}`}`} className='h-full w-full'>
+        <NavLink to={`${enrolled ? `/enrolled/${course_id}/-1`: `/courses/${Number(course_id)}`}`} className='h-full w-full'>
         <div className="card bg-[#EEBF9F]/10 rounded-2xl shadow-xl overflow-hidden p-4 max-w-sm flex flex-col justify-between h-[400px]">
   <figure className='flex-1 rounded-xl'>
     <img className='w-full h-full object-cover rounded-xl'
