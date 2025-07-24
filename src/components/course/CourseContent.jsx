@@ -2,17 +2,16 @@ import { useContext, useEffect, useState } from "react";
 
 import { FaBook, FaFilePdf, FaLock, FaLockOpen, FaPlay, FaQuestion, FaVideo } from "react-icons/fa";
 import { Link, NavLink } from "react-router-dom";
-import { authContext } from "../context/AuthProvider";
-import Loading from "./Loading";
-import { EnrollContext } from "../context/EnrollmentProvider";
-import useFetch from "../functions/fetch";
+import { authContext } from "../../context/AuthProvider";
+import Loading from "../Loading";
+import { EnrollContext } from "../../context/EnrollmentProvider";
+import useFetch from "../../functions/fetch";
 
 
 const CourseContent = ({ course_id}) => {
   const [content, setContent] = useState([]);
-  const { dbUser,baseUrl } = useContext(authContext);
+  const { dbUser} = useContext(authContext);
   const [loaded, setLoaded] = useState(false);
-  const {isEnrolled}=useContext(EnrollContext);
   const [completedSet, setCompletedSet] = useState(new Set());
   const {fetchMaterial}=useFetch();
 

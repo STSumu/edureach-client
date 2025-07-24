@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { EnrollContext } from '../context/EnrollmentProvider';
 import useFetch from '../functions/fetch';
-import CourseDetails from '../components/CourseDetails';
-import Course from '../components/Course';
 import Loading from '../components/Loading';
 import { Link } from 'react-router-dom';
+import Course from '../components/course/Course';
 
 const MyCourses = () => {
     const {enroll,enLoad}=useContext(EnrollContext);

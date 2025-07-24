@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { authContext } from '../context/AuthProvider';
-import Course from '../components/Course';
+import Course from '../components/course/Course';
+
 
 const AllCourse = () => {
     const {courses}=useContext(authContext);

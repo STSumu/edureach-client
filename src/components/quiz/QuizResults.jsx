@@ -1,79 +1,118 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import useFetch from "../../functions/fetch";
+import { authContext } from "../../context/AuthProvider";
+import Loading from "../Loading";
 
-const QuizResults = ({ quizResults, handleRetake }) => {
+const QuizResults = () => {
+  const { quizId } = useParams();
+  const [attempt, setAttempt] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [totalMarks,setTotal]=useState(0);
+  const { fetchQuiz, fetchAttempt ,fetchAnswers} = useFetch();
+  const { baseUrl, dbUser } = useContext(authContext);
+  const studentId = dbUser?.user_id;
   const navigate = useNavigate();
+  const location = useLocation();
+  useEffect(() => {
+  if (!dbUser) return; // don’t fetch until dbUser is available
 
-  const getBadgeColor = () => {
-    if (quizResults.percentage >= 80) return "bg-green-600";
-    if (quizResults.percentage >= 60) return "bg-yellow-500";
-    return "bg-red-600";
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const quizQues = await fetchQuiz(quizId); // questions without is_correct
+      const quizAttempt = await fetchAttempt(quizId, studentId);
+      const correctAnswer = await fetchAnswers(quizId); // has correct answers
+     
+      setTotal(correctAnswer.total);
+      
+      const questionsWithCorrect = quizQues.map((q) => {
+        const correctForQ = correctAnswer.answers.find(
+          (a) => a.quesId === q.ques_id
+        );
+        const newOptions = q.options.map((opt) => ({
+          ...opt,
+          is_correct: opt.option_id === correctForQ?.optionId,
+        }));
+        return {
+          ...q,
+          options: newOptions,
+        };
+      });
+
+      setQuestions(questionsWithCorrect);
+      setAttempt(quizAttempt?.attempt);
+    } catch (err) {
+      console.error("Error fetching quiz data", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  fetchData();
+}, [quizId, studentId, baseUrl]);
+
+  const getBadgeColor = (percentage) => {
+    if (percentage >= 80) return "bg-green-500";
+    if (percentage >= 60) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+
+  if (loading || !dbUser) {
+    return <Loading />;
+  }
+
+ 
+  const score = attempt?.score || 0;
+  const percentage = totalMarks > 0 ? (parseFloat(score) / totalMarks) * 100 : 0;
+  
   return (
-    <div className="mt-10 max-w-3xl mx-auto p-6">
-      <h2 className="text-center text-2xl font-bold mb-8">Quiz Results</h2>
-
-      {/* Score Summary */}
-      <div className="bg-gray-100 p-6 rounded-lg text-center mb-8">
-        <h3 className="text-blue-600 text-lg mb-2">Your Score</h3>
-        <p className="text-2xl font-bold mb-1">
-          {quizResults.totalScore.toFixed(1)} / {quizResults.totalMarks}
-        </p>
-        <p className="text-gray-600">
-          {quizResults.correctAnswers} out of {quizResults.totalQuestions} correct
-        </p>
-        <p className="text-gray-500">({quizResults.percentage.toFixed(1)}%)</p>
+    <div className="h-min-screen max-w-4xl container mx-auto px-2 md:px-8 lg:px-16 py-10">
+      <div className={`p-4 rounded ${getBadgeColor(percentage)}`}>
+        <h2 className="text-lg font-bold">Your Score: {score}/{totalMarks}</h2>
+        <p>Percentage: {percentage.toFixed(2)}%</p>
       </div>
 
-      {/* Badge */}
-      <div className="text-center mb-8">
-        <span className={`px-5 py-2 rounded-full text-white font-bold ${getBadgeColor()}`}>
-          {quizResults.percentage >= 80
-            ? "Excellent!"
-            : quizResults.percentage >= 60
-            ? "Good Job!"
-            : "Keep Practicing!"}
-        </span>
+      <div>
+        {questions.map((ques, idx) =>{
+         let studentAnswer = attempt?.answers?.find(
+    (ans) => ans.ques_id === ques.ques_id
+  )?.option_id;
+         return (
+          <div
+            key={idx}
+            className="flex flex-col p-4 md:p-8 border border-black my-5 rounded-lg"
+          >
+            <h3 className="font-semibold">{ques.quiz_text}</h3>
+            <ul className="list-disc ml-5">
+              {ques.options?.map((option, i) => {
+                let textcolor = "text-black"; // default
+
+                  if (option.is_correct) {
+                    textcolor = "text-green-700 font-bold";
+                  }
+                  if (option.option_id === studentAnswer) {
+                    if (option.is_correct) {
+                      textcolor = "text-blue-500 font-bold";
+                    } else {
+                      textcolor = "text-red-500 font-bold";
+                    }
+                  }
+              return (
+                <li
+                  key={i}
+                  className={textcolor}
+                >
+                  {option.option_txt}
+                </li>
+              )})}
+            </ul>
+          </div>
+        )})}
       </div>
-
-      {/* Detailed Review */}
-      <h4 className="text-xl font-semibold mb-4">Question Review</h4>
-      {quizResults.results.map((result, i) => (
-        <div key={i} className="bg-white border border-gray-200 rounded p-4 mb-4">
-          <h5 className="font-medium mb-2">Question {i + 1}: {result.question}</h5>
-          <p className="mb-1">
-            <strong>Your Answer:</strong>{" "}
-            <span className={result.isCorrect ? "text-green-600" : "text-red-600"}>
-              {result.selectedOption} {result.isCorrect ? "✓" : "✗"}
-            </span>
-          </p>
-          {!result.isCorrect && (
-            <p className="mb-1">
-              <strong>Correct Answer:</strong>{" "}
-              <span className="text-green-600">{result.correctOption}</span>
-            </p>
-          )}
-          <p>
-            <strong>Marks:</strong> {result.marks.toFixed(1)} / {quizResults.marksPerQuestion.toFixed(1)}
-          </p>
-        </div>
-      ))}
-
-      {/* Buttons */}
-      <div className="text-center mt-6">
-        <button
-          onClick={handleRetake}
-          className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 mr-3"
-        >
-          Retake Quiz
-        </button>
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="px-6 py-3 bg-gray-600 text-white rounded hover:bg-gray-700"
-        >
-          Back to Dashboard
-        </button>
+      <div>
+        <button className="btn" onClick={()=>{navigate(`${location.state}`,{replace: true,})}}>Go to Dashboard</button>
       </div>
     </div>
   );

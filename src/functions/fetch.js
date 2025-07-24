@@ -36,8 +36,48 @@ const useFetch = () => {
       return null
     }
   };
+  const fetchQuiz=async(quizId)=>{
+    try{
+      const result=await fetch(`${baseUrl}/question/${quizId}`)
+      const data=result.json();
+      return data;
+    }
+    catch(err){
+      return null;
+    }
+  }
+  const fetchAnswers=async(quizId)=>{
+    try{
+      const result=await fetch(`${baseUrl}/quiz/answer/${quizId}`)
+      const data=result.json();
+      return data;
+    }
+    catch(err){
+      return null;
+    }
+  }
+  const fetchAttempt=async(quizId,studentId)=>{
+    try{
+      const result=await fetch(`${baseUrl}/quizattempt/${quizId}?studentId=${studentId}`)
+      const data=result.json();
+      return data;
+    }
+    catch(err){
+      return null;
+    }
+  }
+  const fetchProgress=async(studentId,courseId)=>{
+    try{
+      const result=await fetch(`${baseUrl}/progress/${courseId}?studentId=${studentId}`)
+      const data=result.json();
+      return data;
+    }
+    catch(err){
+      return null;
+    }
+  }
 
- return {fetchCourse,fetchMaterial,fetchMaterialWithAccess};
+ return {fetchCourse,fetchMaterial,fetchMaterialWithAccess,fetchQuiz,fetchAnswers,fetchAttempt,fetchProgress};
 };
 
 export default useFetch;
