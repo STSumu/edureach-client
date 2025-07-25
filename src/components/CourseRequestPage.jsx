@@ -53,7 +53,7 @@ const CourseRequestPage = () => {
   const isFormValid = courseData.courseName && courseData.courseDescription && courseData.startDate && courseData.url;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-[#EEBF9F]/10 p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header with Steps */}
         <div className="mb-8">

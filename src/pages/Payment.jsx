@@ -6,15 +6,20 @@ import Swal from 'sweetalert2';
 import { EnrollContext } from '../context/EnrollmentProvider';
 
 const Payment = () => {
-    const { baseUrl, dbUser } = useContext(authContext);
+    const { baseUrl, dbUser,getTokenHeader} = useContext(authContext);
     const [payment, setPayment] = useState([]);
     const { refreshEnrollments } = useContext(EnrollContext);
     const navigate = useNavigate();
     useEffect(() => {
-        fetch(`${baseUrl}/pay/${dbUser.user_id}`)
-            .then(res => res.json())
-            .then(data => setPayment(data));
-    }, [])
+    const fetchPayment = async () => {
+        const headers = await getTokenHeader(); // Await here
+        const res = await fetch(`${baseUrl}/pay`, { headers });
+        const data = await res.json();
+        setPayment(data);
+    };
+    fetchPayment();
+}, []);
+
     if (payment.length === 0) {
         return <Loading></Loading>
     }
@@ -28,11 +33,13 @@ const Payment = () => {
         order_id,
 
     } = payment[0];
-    const handleConfirmPayment = () => {
+    const handleConfirmPayment = async() => {
+        const headers = await getTokenHeader();
         fetch(`${baseUrl}/pay`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                ...headers,
             },
             body: JSON.stringify({ orderId: order_id, paymentStatus: 'successful' })
         })
@@ -67,10 +74,11 @@ const Payment = () => {
                     })
                         .then(async() => {
                             await refreshEnrollments();
+                            const headers = await getTokenHeader();
                             fetch(`${baseUrl}/cart/clear`, {
                                 method: 'DELETE',
                                 body: JSON.stringify({ stdId: dbUser.user_id }),
-                                headers: { 'Content-Type': 'application/json' }
+                                headers: { 'Content-Type': 'application/json',...headers }
                             })
                                 .then(res => res.json())
                                 .then(data => {
@@ -86,11 +94,13 @@ const Payment = () => {
             }
             )
     };
-    const handleCancelPayment = () => {
+    const handleCancelPayment = async() => {
+        const headers = await getTokenHeader();
         fetch(`${baseUrl}/pay`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                ...headers,
             },
             body: JSON.stringify({ orderId: order_id, paymentStatus: 'failed' })
         })

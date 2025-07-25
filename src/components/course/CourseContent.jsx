@@ -17,7 +17,7 @@ const CourseContent = ({ course_id}) => {
 
   useEffect(() => {
   const getContent = async () => {
-    const materials = await fetchMaterial(course_id, dbUser.user_id);
+    const materials = await fetchMaterial(course_id);
     const completedIds = materials
   .filter(mat => !mat.islocked)
   .map(mat => mat.material_id);

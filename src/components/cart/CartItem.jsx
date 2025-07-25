@@ -72,7 +72,7 @@ const CartItem = ({ courseId,handleRemove }) => {
           <FiHeart className="w-full"/> 
         </button>
         <button
-          onClick={() => handleRemove(userId,courseId)}
+          onClick={() => handleRemove(courseId)}
         >
           <FiTrash className="w-full text-red-600 hover:text-red-900"/> 
         </button>

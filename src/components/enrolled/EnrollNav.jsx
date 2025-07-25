@@ -1,6 +1,6 @@
 
 import logo from "../../assets/logo.png";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { useContext, useState, useEffect } from "react";
 import Swal from "sweetalert2";
@@ -53,7 +53,7 @@ const navigate = useNavigate();
   
 
   return (
-    <div className={`navbar z-10 ${scrolled ? 'bg-[#A75A44]': 'bg-transparent'} px-2 md:px-8  shadow-sm fixed`}>
+    <div className={`navbar z-30 ${scrolled ? 'bg-[#A75A44]': 'bg-transparent'} px-2 md:px-8  shadow-sm fixed`}>
       <div className="navbar-start ">
 
         {/* Brand */}
@@ -71,7 +71,7 @@ const navigate = useNavigate();
             E-Learning System
           </span>
         </div>
-        <h1 className="pl-5 md:pl-10 text-2xl hidden md:flex">{course.course_name}</h1>
+        {courseId && <><h1 className="pl-5 md:pl-10 text-2xl hidden md:flex">{course.course_name}</h1></>}
       </div>
 
       <div className="navbar-center hidden lg:flex">
@@ -79,8 +79,8 @@ const navigate = useNavigate();
       </div>
 
       <div className="navbar-end flex items-center ml-auto space-x-4 pr-4 text-black">
-        <Rate courseId={courseId}></Rate>
-        <Progress courseId={courseId}></Progress>
+        {courseId && <><Rate courseId={courseId}></Rate>
+        <Progress courseId={courseId}></Progress></>}
         {user ? (
           <div className="dropdown dropdown-end text-black">
             <div tabIndex={0} role="button" className="w-12 h-12">

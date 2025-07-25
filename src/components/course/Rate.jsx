@@ -69,7 +69,7 @@ const Rate = ({ courseId, onRate }) => {
       {/* Button to open modal */}
       <label htmlFor="my_modal_7" className="btn shadow-0 border-0 flex flex-row items-center gap-2">
         <FaStar className="text-yellow-400" />
-        <p className="hidden md:flex">Leave a Rating</p>
+        <p className="hidden md:flex text-xs flex-row">Leave a Rating</p>
       </label>
 
       {/* Modal */}

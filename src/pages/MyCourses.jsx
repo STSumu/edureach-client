@@ -39,8 +39,8 @@ const MyCourses = () => {
   if (loading) 
     return <Loading />;
     return (
-        <div className='container mx-auto my-30 px-4 md:px-8 lg:px-30'>
-            <h1 className='text-4xl font-bold text-black pb-10'>My Courses</h1>
+        <div className='container mx-auto my-20 px-4 md:px-8 lg:px-30'>
+            <h1 className='text-4xl font-bold text-black pb-8'>My Courses</h1>
             {
               myCourses.length==0 ? 
               <div className='flex justify-center items-center py-10'>

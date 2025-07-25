@@ -1,0 +1,20 @@
+/* Remove default background and styling from active tab */
+.react-tabs__tab {
+  background: transparent !important;
+  color: #f3dbc8 !important;
+  border: none !important;
+  padding: 8px 16px;
+  cursor:grab;
+}
+
+/* Add a white bottom border when selected */
+.react-tabs__tab--selected {
+  border-bottom: 4px solid white !important;
+  background: transparent !important;
+  color: white !important;
+}
+
+/* Remove focus outline (optional) */
+.react-tabs__tab:focus {
+  box-shadow: none !important;
+}
