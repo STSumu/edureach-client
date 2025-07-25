@@ -7,22 +7,33 @@ import useFetch from '../../functions/fetch';
 import Loading from '../Loading';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { FaArrowDown } from 'react-icons/fa';
+import { EnrollContext } from '../../context/EnrollmentProvider';
 
 const Progress = ({courseId}) => {
     const [open, setOpen] = useState(false);
+    const {refreshProgress}=useContext(EnrollContext);
     const [progressData,setProgressData]=useState(null);
     const {dbUser}=useContext(authContext);
     const [loading,setLoading]=useState(true);
     const {fetchProgress}=useFetch();
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    useEffect(()=>{
-        const fetchdata=async()=>{
-            const data=await fetchProgress(dbUser.user_id,courseId);
-            setProgressData(data);
-            setLoading(false);
-        }
-        fetchdata();
-    },[])
+    const loadProgress = async () => {
+    setLoading(true);
+    const data = await fetchProgress(dbUser.user_id, courseId);
+    setProgressData(data);
+    setLoading(false);
+  };
+  
+
+  // Initial load
+  useEffect(() => {
+    loadProgress();
+  }, [courseId, dbUser.user_id]);
+
+  // Trigger external refresh (whenever Material calls it)
+  useEffect(() => {
+       loadProgress();
+  }, [refreshProgress]);
+
     if(loading) return <Loading></Loading>
     
     const {materials_completed,progress,quiz_average,quizzes_attempted,total_materials,total_quizzes}=progressData;
@@ -41,7 +52,7 @@ const round = (num) => Math.round(num * 100) / 100;
             
    <div className="dropdown dropdown-center">
   <label tabIndex={0} className="btn rounded-full p-0 shadow-none border-0 h-8 w-8 md:rounded-lg  md:w-48 md:px-4 md:py-5 cursor-pointer">
-    <div className="radial-progress text-sm text-orange-700"  style={{
+    <div className="radial-progress text-xs text-orange-700"  style={{
       "--value": `${round(progress)}`,
       "--size": "2rem",
       "--thickness": "2px",
@@ -63,13 +74,13 @@ const round = (num) => Math.round(num * 100) / 100;
         <span className="text-xs font-medium">
         Quiz Attempted ({quizzes_attempted}/{total_quizzes})
       </span>
-      <ProgressBar completed={quizPercent} maxCompleted={100} height={10} labelSize={10}/>
+      <ProgressBar completed={round(quizPercent)} maxCompleted={100} height={10} labelSize={10}/>
     </li>
     <li className='flex flex-row justify-between items-center'>
         <span className="text-xs font-medium inline">
         Average Quiz Mark
       </span>
-      <span className='font-bold'>{round(quiz_average)}</span>
+      <span className='font-bold'>{round(quiz_average)}%</span>
     </li>
   </ul>
 </div>

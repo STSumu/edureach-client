@@ -7,36 +7,39 @@ import { useEffect } from 'react';
 import Loading from '../components/Loading';
 import Swal from 'sweetalert2';
 import OrderItem from './../components/cart/OrderItem';
+import useFetch from '../functions/fetch';
 
 
 const OrderPage = () => {
-  const { dbUser, baseUrl } = useContext(authContext);
+  const { dbUser, baseUrl,getTokenHeader } = useContext(authContext);
   const [total, setTotal] = useState(0);
   const { courses } = useContext(authContext);
   const [items, setItems] = useState([]);
+  const [loading,setLoading]=useState(true);
   const [payMethod, setPaymethod] = useState('');
   const disc = 0;
   const navigate = useNavigate();
+  const {fetchOrder,fetchOrderTotal}=useFetch();
 
   useEffect(() => {
-    fetch(`${baseUrl}/order/${dbUser.user_id}`)
-      .then(res => res.json())
-      .then(data => {
+    const fetchData=async ()=>{
+        const data=await fetchOrder();
         const pendingOnly = data.filter(item => item.status === 'pending');
         setItems(pendingOnly);
-      })
+        const data2=await fetchOrderTotal();
+        setTotal(data2.total);
+        setLoading(false);
+    }
+    fetchData();
   }, [])
 
-  useEffect(() => {
-    fetch(`${baseUrl}/order/total/${dbUser.user_id}`)
-      .then(res => res.json())
-      .then(data => setTotal(data.total))
-  }, [])
+  
 
   const handleSelect = (e) => {
     setPaymethod(e.target.value);
   }
-  const handleOrderConfirm = () => {
+  const handleOrderConfirm = async() => {
+    const headers = await getTokenHeader();
     if (!payMethod) {
     Swal.fire({
       icon: 'warning',
@@ -53,6 +56,7 @@ const OrderPage = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+         ...headers,
       },
       body: JSON.stringify(confirmItem)
     })
@@ -65,7 +69,7 @@ const OrderPage = () => {
   }
 
 
-  if (items.length === 0 || !total) {
+  if (loading) {
     return <Loading></Loading>
   }
   const orderItems = courses.filter(course => items.map(item => item.course_id).includes(course.course_id));

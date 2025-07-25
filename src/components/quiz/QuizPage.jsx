@@ -7,12 +7,14 @@ import QuizNavigation from "./QuizNavigation";
 import { authContext } from "../../context/AuthProvider";
 import useFetch from "../../functions/fetch";
 import Swal from "sweetalert2";
+import { EnrollContext } from "../../context/EnrollmentProvider";
 
 
 const QuizPage = () => {
   const { quizId } = useParams();
   const { baseUrl,dbUser } = useContext(authContext);
   const {fetchQuiz}=useFetch();
+  const {triggerProgressRefresh}=useContext(EnrollContext);
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -62,6 +64,7 @@ const QuizPage = () => {
 
 
   const handleSubmit = () => {
+    
     const submit={
       studentId:dbUser.user_id,
       quizId:quizId,
@@ -77,6 +80,7 @@ const QuizPage = () => {
     .then((res) => res.json())
           .then((data) => {
             if (data.attempt_id) {
+              triggerProgressRefresh();
               Swal.fire({
                 title: 'Successfully submited the quiz.',
                 text: 'See Results',

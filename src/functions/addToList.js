@@ -5,18 +5,20 @@ import { authContext } from "../context/AuthProvider";
 import Swal from "sweetalert2";
 
 const useAddtoList = () => {
-  const { baseUrl} = useContext(authContext);
+  const { baseUrl,getTokenHeader} = useContext(authContext);
   const navigate = useNavigate();
 
-  const handleAddCart = (cartItem) => {
+  const handleAddCart = async(cartItem) => {
     // cartItem={
     //   userId,
     // course_id
     // }
+    const headers = await getTokenHeader();
     fetch(`${baseUrl}/cart`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        ...headers,
       },
       body: JSON.stringify(cartItem),
     })
@@ -40,11 +42,13 @@ const useAddtoList = () => {
         }
       });
   };
-  const handleAddWishList = (wishItem) => {
+  const handleAddWishList = async(wishItem) => {
+    const headers = await getTokenHeader();
       fetch(`${baseUrl}/wish`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          ...headers,
         },
         body: JSON.stringify(wishItem),
       })
@@ -71,9 +75,13 @@ const useAddtoList = () => {
           }
         });
     }
-  const handleCartRemove=(stdId,crsId)=>{
-        fetch(`${baseUrl}/cart/${stdId}?crsId=${crsId}`, {
+  const handleCartRemove=async(crsId)=>{
+        const headers = await getTokenHeader();
+        fetch(`${baseUrl}/cart/${crsId}`, {
         method: "DELETE",
+        headers:{
+          ...headers,
+        }
         })
   .then(res => res.json())
   .then(data => {
@@ -88,9 +96,13 @@ const useAddtoList = () => {
   });
 
   }
-  const handleWishRemove=(stdId,crsId)=>{
-        fetch(`${baseUrl}/wish/${stdId}?crsId=${crsId}`, {
+  const handleWishRemove=async(crsId)=>{
+        const headers = await getTokenHeader();
+        fetch(`${baseUrl}/wish/${crsId}`, {
         method: "DELETE",
+        headers:{
+          ...headers,
+        }
         })
   .then(res => res.json())
   .then(data => {
@@ -106,18 +118,20 @@ const useAddtoList = () => {
 
 
   }
-  const handleAddOrder = async ({userId,courseId}) => {
+  const handleAddOrder = async ({courseId}) => {
    try {
     // orderItem={
     //   userId,
     //   courseId,
     // }
-    const res = await fetch(`${baseUrl}/order/`, {
+    const headers = await getTokenHeader();
+    const res = await fetch(`${baseUrl}/order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...headers,
       },
-      body: JSON.stringify({userId,courseId}),
+      body: JSON.stringify({courseId}),
     });
 
     const data = await res.json();

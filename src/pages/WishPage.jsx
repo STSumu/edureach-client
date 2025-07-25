@@ -3,21 +3,23 @@ import { authContext } from '../context/AuthProvider';
 import { Link } from 'react-router-dom';
 import useAddtoList from '../functions/addToList';
 import WishItem from './../components/cart/WishItem';
+import useFetch from '../functions/fetch';
 
 const WishPage = () => {
     const [wish,setWish]=useState([]);
-  const {dbUser}=useContext(authContext);
  const {handleWishRemove}=useAddtoList();
+ const {fetchWish}=useFetch();
+ 
   useEffect(() => {
-      fetch(`http://localhost:4000/wish/${dbUser.user_id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setWish(data);
-        });   
+      const fetchData=async ()=>{
+        const data=await fetchWish();
+        setWish(data);
+      }
+      fetchData();    
   }, []);
 
   const handleRemove = (crsId) => {
-        handleWishRemove(dbUser.user_id,crsId);
+        handleWishRemove(crsId);
         const newWish=wish.filter((wishitem)=>wishitem.course_id !== crsId);
         setWish(newWish);
   };
@@ -25,7 +27,7 @@ const WishPage = () => {
 
 
   return (
-    <div className="max-w-4xl mx-auto p-4 mt-20">
+    <div className="p-4 md:p-10 md:px-20 lg:px-30 mx-auto mt-15">
       <h2 className="text-2xl font-bold mb-4">Your WishList</h2>
       <div>
         {

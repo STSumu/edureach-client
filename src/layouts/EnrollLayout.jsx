@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import EnrollNav from '../components/enrolled/EnrollNav';
 import Footer from '../components/Footer';
@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 const EnrollLayout = () => {
     const param=useParams();
     const location=useLocation();
+    
     return (
         <>
         <header>

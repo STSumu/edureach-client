@@ -3,6 +3,7 @@ import { authContext } from '../context/AuthProvider';
 import useAddtoList from '../functions/addToList';
 import { FaArrowRight } from 'react-icons/fa';
 import CartItem from './../components/cart/CartItem';
+import useFetch from '../functions/fetch';
 
 
 
@@ -11,26 +12,24 @@ const CartPage = () => {
   const {dbUser,baseUrl}=useContext(authContext);
   const [total,setTotal]=useState(0);
   const {handleCartRemove,handleAddOrder}=useAddtoList();
+  const {fetchCart,fetchCartTotal}=useFetch();
 
   useEffect(() => {
-      fetch(`${baseUrl}/cart/${dbUser.user_id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setCart(data);
-        });   
+      const fetchData=async ()=>{
+        const fetchcart=await fetchCart();
+        setCart(fetchcart);
+        const fetchcarttotal=await fetchCartTotal();
+        setTotal(fetchcarttotal[0].total);
+
+      }
+      fetchData();  
   }, []);
-  useEffect(() => {
-      fetch(`${baseUrl}/cart/total/${dbUser.user_id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setTotal(data[0].total);
-        })
-  }, []);
+  
 
 
 
-  const handleRemove=(userId,courseId)=>{
-    handleCartRemove(userId,courseId);
+  const handleRemove=(courseId)=>{
+    handleCartRemove(courseId);
     const newCart=cart.filter((cartitem)=>cartitem.course_id !== courseId);
     setCart(newCart);
     let newTotal = 0;
@@ -46,14 +45,13 @@ setTotal(newTotal);
       courseId: cartitem.course_id,
     }));
     for(const item of orderItems){
-      console.log(item.courseId);
-        handleAddOrder({ userId: dbUser.user_id, courseId: item.courseId });
+        handleAddOrder({courseId: item.courseId });
     }
         
     }
   
   return (
-    <div className="max-w-4xl mx-auto p-4 mt-20">
+    <div className="p-4 md:p-10 md:px-20 lg:px-30 mx-auto mt-15">
       <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
       <div>
         {

@@ -1,6 +1,6 @@
 
 import logo from "../assets/logo.png";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { useContext, useState, useEffect } from "react";
 import { authContext } from "../context/AuthProvider";
@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const location=useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,24 +19,33 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   
-  const { user, logOut,dbUser} = useContext(authContext);
+  const { user, logOut,dbUser,getTokenHeader,baseUrl} = useContext(authContext);
  const [search, setSearch] = useState("");
 const navigate = useNavigate();
 
-  const handleSignOut = () => {
-    logOut()
-      .then(() => {
-        Swal.fire({
-          title: "Success",
-          icon: "success",
-          text: `${user.displayName || "User"} logged out successfully`,
-          draggable: true,
-        });
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  };
+const handleSignOut = async () => {
+  try {
+    const headers = await getTokenHeader();
+    await fetch(`${baseUrl}/user/deactivate`, {
+      method: "PUT",
+      headers: headers,
+    });
+
+    await logOut();
+
+    Swal.fire({
+      title: "Success",
+      icon: "success",
+      text: `${user.displayName || "User"} logged out successfully`,
+      draggable: true,
+    }).
+    then(() => { 
+            navigate('/');
+          });
+  } catch (err) {
+    alert("Error logging out: " + err.message);
+  }
+};
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -44,26 +54,27 @@ const navigate = useNavigate();
       setSearch(""); // clear input
     }
   };
+  
 
   const links = (
     <>
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
+        <li>
+          <NavLink to="/teacher">Instructor</NavLink>
+        </li>
+        <li>
+          <NavLink to="/mylearning">My Learning</NavLink>
+        </li>
       <li>
-        <NavLink to="/dashboard">Dashboard</NavLink>
-      </li>
-      <li>
-        <NavLink to="/courses">Courses</NavLink>
-      </li>
-      <li>
-        <NavLink to="/profile">Profile</NavLink>
+        <NavLink to="/courses">Explore</NavLink>
       </li>
     </>
   );
 
   return (
-    <div className={`navbar z-10 ${scrolled ? 'bg-[#A75A44]': 'bg-transparent'} px-2 md:px-8 lg:px-25 shadow-sm fixed`}>
+    <div className={`navbar z-10 px-2 ${scrolled ? 'bg-[#A75A44]': 'bg-transparent'} ${location.pathname==='/dashboard' ? 'shadow-none' : 'shadow-sm md:px-8 lg:px-25'}   fixed`}>
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden text-black">
@@ -108,7 +119,7 @@ const navigate = useNavigate();
       </div>
 
       <div className="navbar-center hidden lg:flex">
-        <ul className={`menu menu-horizontal ${scrolled && 'text-white'} px-1 space-x-4`}>{links}</ul>
+        <ul className={`menu menu-horizontal ${scrolled && 'text-white'} px-1 space-x-4 flex items-center`}>{links}</ul>
       </div>
 
       <div className="navbar-end flex items-center ml-auto space-x-4 pr-4 text-black">

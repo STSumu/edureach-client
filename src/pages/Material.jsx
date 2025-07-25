@@ -12,13 +12,13 @@ const Material = ({ course_id}) => {
   const [content, setContent] = useState([]);
   const { dbUser,baseUrl } = useContext(authContext);
   const [loaded, setLoaded] = useState(false);
-  const {isEnrolled}=useContext(EnrollContext);
+  const {isEnrolled,triggerProgressRefresh}=useContext(EnrollContext);
   const [completedSet, setCompletedSet] = useState(new Set());
   const {fetchMaterial}=useFetch();
 
   useEffect(() => {
   const getContent = async () => {
-    const materials = await fetchMaterial(course_id, dbUser.user_id);
+    const materials = await fetchMaterial(course_id);
     const completedIds = materials
   .filter(mat => !mat.islocked)
   .map(mat => mat.material_id);
@@ -33,6 +33,7 @@ const Material = ({ course_id}) => {
 
 
 const handleCompletion = async (matId) => {
+  triggerProgressRefresh();
   const material = content.find(m => m.material_id === matId);
   if (material.islocked) {
     alert("This material is locked. Complete the previous one first.");

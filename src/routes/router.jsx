@@ -22,6 +22,11 @@ import CourseRequestPage from "../components/CourseRequestPage";
 import QuizPage from "../components/quiz/QuizPage";
 import QuizResults from "../components/quiz/QuizResults";
 import CourseDetails from "../components/course/CourseDetails";
+import TeacherRoute from "./TeacherRoute";
+import Student from "../pages/student/Student";
+import TeacherLayout from "../layouts/TeacherLayout";
+import BeTeacher from "../pages/teacher/BeTeacher";
+import TeacherCourse from "../pages/teacher/teacherCourse";
 
 
 export const router = createBrowserRouter([
@@ -42,13 +47,10 @@ export const router = createBrowserRouter([
         path: "/courses/:course_id",
         element: <CourseDetails />,
       },
+      
       {
-        path: "/dashboard",
-        element: (
-          <PrivateRoute>
-            <Dashboard></Dashboard>
-          </PrivateRoute>
-        ),
+        path:'/mylearning',
+        element:<PrivateRoute><Student></Student></PrivateRoute>,
       },
       {
         path: "/mycourses",
@@ -121,6 +123,24 @@ export const router = createBrowserRouter([
       {
         path:'certificate/:courseId',
         element:<CertificatePage></CertificatePage>
+      }
+    ]
+  },
+  {
+        path:'/teacher/log',
+        element:<BeTeacher></BeTeacher>,
+      },
+  {
+    path:'/teacher',
+    element:<TeacherRoute><TeacherLayout></TeacherLayout></TeacherRoute>,
+    children:[
+      {
+        path:'courses',
+        element:<TeacherCourse></TeacherCourse>,
+      },
+      {
+        path:'create',
+        element:<CourseRequestPage></CourseRequestPage>
       }
     ]
   },
