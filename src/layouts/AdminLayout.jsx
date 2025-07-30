@@ -65,7 +65,7 @@ const AdminLayout = () => {
           </NavLink>
 
           <NavLink
-            to="/teacher/community"
+            to="/teacher"
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2 rounded-md hover:bg-[#EEBF9F] transition ${
                 isActive ? "bg-[#EEBF9F] font-semibold" : ""

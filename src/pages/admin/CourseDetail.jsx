@@ -4,24 +4,28 @@ import { authContext } from "../../context/AuthProvider";
 import Loading from "../../components/Loading";
 import { FaUserCircle } from "react-icons/fa";
 import Slider from "@mui/material/Slider";
+import Swal from "sweetalert2";
 
 const CourseDetail = () => {
   const { reqId } = useParams();
   const [course, setCourse] = useState();
   const [showForm, setShowForm] = useState(false);
-  const [price, setPrice] = useState("");
-  const [percentage, setPercentage] = useState("");
-  const [discount, setDiscount] = useState(0);
+  const [data,setData]=useState({
+    price:0,
+    revenue:0,
+    discount:0,
+  })
+  
   const [loading, setLoading] = useState(false);
   const { baseUrl, getTokenHeader } = useContext(authContext);
-
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
       const headers = await getTokenHeader();
       const res = await fetch(`${baseUrl}/admin/request/${reqId}`, { headers });
       const data = await res.json();
       setCourse(data[0]);
     };
+  useEffect(() => {
+    
     fetchData();
   }, [baseUrl, getTokenHeader, reqId]);
 
@@ -51,14 +55,7 @@ const CourseDetail = () => {
       ? "bg-red-500"
       : "bg-gray-400";
 
-  const formatDate = (dateStr) =>
-    dateStr
-      ? new Date(dateStr).toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })
-      : "N/A";
+  
 
   const handleApprove = async () => {
     setLoading(true);
@@ -67,27 +64,59 @@ const CourseDetail = () => {
         ...(await getTokenHeader()),
         "Content-Type": "application/json",
       };
-      const res = await fetch(`${baseUrl}/admin/request/${reqId}/approve`, {
+      const res = await fetch(`${baseUrl}/admin/approve/${reqId}`, {
         method: "PATCH",
         headers,
-        body: JSON.stringify({ price, percentage, discount }),
+        body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error("Failed to approve request");
-      alert("Course approved successfully!");
-      setShowForm(false);
+      if (!res.ok) throw new Error("Failed to approve course request");
+      const result = await res.json();
+      if (result.courseId) {
+        await fetchData();
+        Swal.fire({
+          title: "Course Approved",
+          text: "Course has been published successfully.",
+          icon: "success",
+        });
+      }
     } catch (err) {
       alert(err.message);
     }
     setLoading(false);
   };
 
-  const handleDecline = () => {
-    alert("Decline clicked - implement API call");
-  };
+  const handleDecline=()=>{
 
-  const handleLater = () => {
-    alert("Later clicked - implement accordingly");
-  };
+  }
+  const formatDate = (dateStr) =>
+    dateStr
+      ? new Date(dateStr).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : "N/A";
+  
+  const handleUpdateDiscount = async () => {
+  setLoading(true);
+  try {
+    const headers = {
+      ...(await getTokenHeader()),
+      "Content-Type": "application/json",
+    };
+    const res = await fetch(`${baseUrl}/admin/course/${reqId}/discount`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ discount: data.discount }),
+    });
+    if (!res.ok) throw new Error("Failed to update discount");
+    alert("Discount updated successfully!");
+  } catch (err) {
+    alert(err.message);
+  }
+  setLoading(false);
+};
+if(loading) return <Loading></Loading>
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
@@ -166,63 +195,98 @@ const CourseDetail = () => {
         </div>
       )}
 
-      {/* Approval Form */}
-      {showForm && (
-        <div className="mt-6 border p-4 rounded shadow-sm space-y-4">
-          <div>
-            <label htmlFor="price" className="block font-semibold mb-1">
-              Set Final Course Price ($)
-            </label>
-            <input
-              id="price"
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-            />
-          </div>
-          <div>
-            <label htmlFor="percentage" className="block font-semibold mb-1">
-              Instructor Revenue Share (%)
-            </label>
-            <input
-              id="percentage"
-              type="number"
-              min={0}
-              max={100}
-              value={percentage}
-              onChange={(e) => setPercentage(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-            />
-          </div>
-          <div>
-            <label className="block font-semibold mb-1">Discount (%)</label>
-            <Slider
-              value={discount}
-              onChange={(e, newVal) => setDiscount(newVal)}
-              max={100}
-              valueLabelDisplay="auto"
-            />
-          </div>
+      
+      {/* Before approval: full form */}
+{!["accepted"].includes(status) && showForm && (
+  <div className="mt-6 border p-4 rounded shadow-sm space-y-4">
+    {/* Price input */}
+    <div>
+      <label htmlFor="price" className="block font-semibold mb-1">
+        Set Final Course Price ($)
+      </label>
+      <input
+        id="price"
+        type="number"
+        value={data.price}
+        onChange={(e) => setData({ ...data, price: parseFloat(e.target.value) })}
+        className="w-full border rounded px-3 py-2"
+      />
+    </div>
 
-          {/* Summary */}
-          <div className="text-sm text-gray-700 space-y-1">
-            <p>Final Price: ${price || "0.00"}</p>
-            <p>Instructor Share: {percentage || 0}%</p>
-            <p>Discount: {discount}%</p>
-          </div>
+    {/* Revenue input */}
+    <div>
+      <label htmlFor="percentage" className="block font-semibold mb-1">
+        Instructor Revenue Share (%)
+      </label>
+      <input
+        id="percentage"
+        type="number"
+        min={0}
+        max={100}
+        value={data.revenue}
+        onChange={(e) => setData({ ...data, revenue: parseFloat(e.target.value) })}
+        className="w-full border rounded px-3 py-2"
+      />
+    </div>
 
-          <button
-            onClick={handleApprove}
-            disabled={loading}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded mt-3"
-          >
-            Confirm Approval
-          </button>
-        </div>
-      )}
+    {/* Discount slider */}
+    <div>
+      <label className="block font-semibold mb-1">Discount (%)</label>
+      <Slider
+        value={data.discount}
+        onChange={(e, newVal) => setData({ ...data, discount: newVal })}
+        max={100}
+        valueLabelDisplay="auto"
+      />
+    </div>
 
-      {/* Action buttons */}
+    {/* Summary */}
+    <div className="text-sm text-gray-700 space-y-1">
+      <p>Final Price: ${data.price || "0.00"}</p>
+      <p>Instructor Share: {data.revenue || 0}%</p>
+      <p>Discount: {data.discount || 0}%</p>
+    </div>
+
+    <button
+      onClick={handleApprove}
+      disabled={loading}
+      className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded mt-3"
+    >
+      Confirm Approval
+    </button>
+  </div>
+)}
+
+{/* After approval: only discount slider (always visible) */}
+{status === "accepted" && (
+  <div className="mt-6 border p-4 rounded shadow-sm space-y-4">
+    <div>
+      <label className="block font-semibold mb-1">Discount (%)</label>
+      <Slider
+        value={data.discount}
+        onChange={(e, newVal) => setData({ ...data, discount: newVal })}
+        max={100}
+        valueLabelDisplay="auto"
+      />
+    </div>
+
+    <div className="text-sm text-gray-700 space-y-1">
+      <p>Discount: {data.discount || 0}%</p>
+    </div>
+
+    <button
+      onClick={handleUpdateDiscount}  // Separate handler to update discount only
+      disabled={loading}
+      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded mt-3"
+    >
+      Update Discount
+    </button>
+  </div>
+)}
+
+
+
+      
       {status !== "accepted" && !showForm && (
         <div className="flex gap-4">
           <button
@@ -238,13 +302,13 @@ const CourseDetail = () => {
             Decline
           </button>
           <button
-            onClick={handleLater}
             className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded"
           >
             Later
           </button>
         </div>
       )}
+      
     </div>
   );
 };
