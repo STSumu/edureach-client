@@ -9,9 +9,8 @@ const EnrollmentProvider = ({ children }) => {
   const [refreshProgress,setRefreshProgress]=useState(false);
   const { baseUrl, dbUser, getTokenHeader } = useContext(authContext);
   const triggerProgressRefresh = () => {
-  setRefreshProgress(prev => !prev);  // toggle between true/false
+  setRefreshProgress(prev => !prev);
 };
-  // Fetch enrollments on mount or when user changes
   useEffect(() => {
     const fetchEnrollments = async () => {
       if (!dbUser) return;
@@ -29,7 +28,6 @@ const EnrollmentProvider = ({ children }) => {
     fetchEnrollments();
   }, [dbUser, baseUrl, getTokenHeader]);
 
-  // Function to refresh enrollments after changes
   const refreshEnrollments = async () => {
     if (!dbUser) return;
     try {
