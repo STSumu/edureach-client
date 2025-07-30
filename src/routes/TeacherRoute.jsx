@@ -1,5 +1,5 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { Navigate} from "react-router-dom";
+import { useContext } from "react";
 import { authContext } from "../context/AuthProvider";
 import Loading from "../components/Loading";
 
@@ -10,6 +10,7 @@ const TeacherRoute = ({ children }) => {
   const isTeacher = allProfiles?.some(p => p.role === "teacher");
   if (!dbUser) return <Navigate to="/auth/login" />;
   if (!isTeacher) return <Navigate to="/teacherlog" />;
+
 
   return children;
 };

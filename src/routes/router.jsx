@@ -27,9 +27,11 @@ import Student from "../pages/student/Student";
 import TeacherLayout from "../layouts/TeacherLayout";
 import BeTeacher from "../pages/teacher/BeTeacher";
 import TeacherCourse from "../pages/teacher/teacherCourse";
+import EditProfile from "../components/EditProfile";
 import AdminLayout from "../layouts/AdminLayout";
 import Requests from "../pages/admin/Requests"
 import CourseDetail from "../pages/admin/CourseDetail";
+
 
 export const router = createBrowserRouter([
   {
@@ -103,6 +105,10 @@ export const router = createBrowserRouter([
   {
         path: "/course_request",
         element: <CourseRequestPage></CourseRequestPage>
+  },
+   {
+        path: "/edit",
+        element: <EditProfile></EditProfile>
   },
  
   {
