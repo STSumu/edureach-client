@@ -11,12 +11,11 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 
-
 export const authContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [dbUser, setDbUser] = useState(null);
-  const [dbUser2,setDbUser2]=useState(null);
+  const [allProfiles, setAllProfiles] = useState([]);
   const auth = getAuth(app);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,60 +23,143 @@ const AuthProvider = ({ children }) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const googleProvider = new GoogleAuthProvider();
 
+  // Helper function to select user by role priority
+  const selectUserByRole = (profiles) => {
+    if (!profiles || profiles.length === 0) return null;
+    
+    const roleHierarchy = ['admin', 'student', 'teacher'];
+    
+    for (const role of roleHierarchy) {
+      const userWithRole = profiles.find(p => p.role === role);
+      if (userWithRole) return userWithRole;
+    }
+    
+    return profiles[0]; // fallback to first profile
+  };
+
   // Sign-up/login helpers
-  const emailSignup = (email, password) => {
+  const emailSignup = async (email, password) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
+    try {
+      return await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
-  const emaillogin = (email, password) => {
+  const emaillogin = async (email, password) => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
+    try {
+      return await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
-  const googlelogin = () => {
+  const googlelogin = async () => {
     setLoading(true);
-    return signInWithPopup(auth, googleProvider);
+    try {
+      return await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
   };
+
   const getTokenHeader = async () => {
     const user = auth.currentUser;
     if (!user) return {};
-    const token = await user.getIdToken();
-    return {
-      Authorization: `Bearer ${token}`
-    };
+    try {
+      const token = await user.getIdToken();
+      return {
+        Authorization: `Bearer ${token}`
+      };
+    } catch (error) {
+      console.error('Failed to get token:', error);
+      return {};
+    }
   };
 
   // Sync Firebase user to backend
-  const syncUser = async (role,name) => {
+  const syncUser = async (name) => {
     if (!auth.currentUser) return null;
-    const token = await auth.currentUser.getIdToken(); // <-- Fetch token here
+    
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const res = await fetch(`${baseUrl}/user/sync`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ username: name }),
+      });
 
-    const res = await fetch(`${baseUrl}/user/sync`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // <-- Send token
-      },
-      body: JSON.stringify({ role,username:name }),
-    });
+      if (!res.ok) {
+        throw new Error(`Sync failed: ${res.status}`);
+      }
 
-    return res.json();
+      const syncResponse = await res.json();
+      
+      // After successful sync, refresh the user profile
+      await refreshUserProfile();
+      
+      return syncResponse;
+    } catch (error) {
+      console.error('Error syncing user:', error);
+      throw error;
+    }
+  };
+
+  // Function to refresh user profile from backend
+  const refreshUserProfile = async () => {
+    if (!auth.currentUser) return;
+    
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const res = await fetch(`${baseUrl}/user/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch profile: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setAllProfiles(data);
+      
+      const selectedUser = selectUserByRole(data);
+      setDbUser(selectedUser);
+      
+    } catch (err) {
+      console.error("Error fetching user from DB:", err);
+      setDbUser(null);
+      setAllProfiles([]);
+    }
   };
 
   // Fetch all courses (not protected)
   useEffect(() => {
-    fetch(`${baseUrl}/courses`)
+    const controller = new AbortController();
+    
+    fetch(`${baseUrl}/courses`, { signal: controller.signal })
       .then((res) => res.json())
-      .then((data) => setCourses(data));
-  }, [baseUrl]);
+      .then((data) => setCourses(data))
+      .catch((err) => {
+        if (err.name !== 'AbortError') {
+          console.error('Failed to fetch courses:', err);
+        }
+      });
 
-  
+    return () => controller.abort();
+  }, [baseUrl]);
 
   // Watch for Firebase user changes
   useEffect(() => {
@@ -85,29 +167,10 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
 
       if (currentUser) {
-        try {
-          const token = await currentUser.getIdToken(); // <-- Must fetch token
-          const res = await fetch(`${baseUrl}/user/profile`, {
-            headers: { Authorization: `Bearer ${token}` }, // <-- Send token
-          });
-
-          if (!res.ok) throw new Error(`Failed to fetch profile: ${res.status}`);
-          const data = await res.json();
-          setDbUser(data);
-    
-          const res2 = await fetch(`${baseUrl}/teach/profile`, {
-            headers: { Authorization: `Bearer ${token}` }, // <-- Send token
-          });
-
-          if (!res.ok) throw new Error(`Failed to fetch profile: ${res.status}`);
-          const data2 = await res2.json();
-          setDbUser2(data2);
-        } catch (err) {
-          console.error("Error fetching user from DB:", err);
-        }
+        await refreshUserProfile();
       } else {
         setDbUser(null);
-        setDbUser2(null);
+        setAllProfiles([]);
       }
 
       setLoading(false);
@@ -130,7 +193,8 @@ const AuthProvider = ({ children }) => {
     setDbUser,
     syncUser,
     getTokenHeader,
-    dbUser2,
+    allProfiles,
+    refreshUserProfile, // Add this for manual refresh if needed
   };
 
   return (

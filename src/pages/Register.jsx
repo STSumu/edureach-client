@@ -5,62 +5,62 @@ import { authContext } from "../context/AuthProvider";
 import Swal from 'sweetalert2';
 
 const Register = () => {
-    const { googlelogin, emailSignup, setUser, syncUser } = useContext(authContext);
+  const { googlelogin, emailSignup, syncUser } = useContext(authContext);
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const email = e.target.email.value;
     const pass = e.target.password.value;
 
-    emailSignup(email, pass)
-      .then(async (result) => {
-        setUser(result.user); // Firebase user is now set
+    try {
+      const result = await emailSignup(email, pass);
+      
+      // Sync user after successful registration
+      await syncUser(name || result.user.email);
 
-        const role="student";
-        const syncResponse = await syncUser(role,name);
-        if (syncResponse.user_id) {
-          Swal.fire({
-            title: "Success",
-            icon: "success",
-            confirmButtonText: "OK",
-          }).then(() => {
-            e.target.reset();
-            navigate('/auth/login');
-          });
-        } else {
-          alert("Failed to sync user to backend");
-        }
-      })
-      .catch((err) => {
-        alert("Error signing up: " + err.message);
+      Swal.fire({
+        title: "Success",
+        icon: "success",
+        text: "Registration successful! Please login.",
+        confirmButtonText: "OK",
       });
+
+      e.target.reset();
+      navigate('/auth/login');
+    } catch (err) {
+      console.error("Registration error:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Registration Failed",
+        text: err.message,
+      });
+    }
   };
 
-  const handleGoogleLogin = () => {
-    const role="student";
-    googlelogin()
-      .then(async (result) => {
-        setUser(result.user);
-        const syncResponse = await syncUser(role,result.user.displayName);
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await googlelogin();
+      
+      await syncUser(result.user.displayName || result.user.email);
 
-        if (syncResponse.user_id) {
-          Swal.fire({
-            title: "Success",
-            icon: "success",
-            text: "User synced successfully",
-            confirmButtonText: "OK",
-          });
-          navigate('/');
-        } else {
-          alert("Failed to sync user to backend");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Google login failed");
+      Swal.fire({
+        title: "Success",
+        icon: "success",
+        text: "Registration successful!",
+        confirmButtonText: "OK",
       });
+
+      navigate('/');
+    } catch (err) {
+      console.error("Google registration error:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Google Registration Failed",
+        text: err.message,
+      });
+    }
   };
 
   return (
@@ -69,22 +69,24 @@ const Register = () => {
         <DotLottieReact src="/log1.lottie" loop autoplay className="w-full h-160" />
       </div>
       <div className="w-full md:w-1/2 lg:w-1/3 shadow-lg bg-[#EEBF9F66] border-base-300 rounded-box border p-10 space-y-4 text-lg">
-        <form onSubmit={handleRegister} className="fieldset ">
+        <form onSubmit={handleRegister} className="fieldset">
           <label className="label text-base md:text-lg">Name</label>
           <input
             type="text"
             name="name"
             className="input input-bordered w-full text-base"
             placeholder="Name"
+            required
           />
+          
           <label className="label text-base md:text-lg">Email</label>
           <input
             type="email"
             name="email"
             className="input input-bordered w-full text-base"
             placeholder="Email"
+            required
           />
-          
 
           <label className="label text-base md:text-lg">Password</label>
           <input
@@ -92,26 +94,27 @@ const Register = () => {
             name="password"
             className="input input-bordered w-full text-base"
             placeholder="Password"
+            required
           />
 
           <button className="btn bg-[#A75A44] w-full text-base text-white">
             Register
           </button>
         </form>
+        
         <p className="text-sm md:text-base">
           Already have an account?{" "}
           <Link to="/auth/login" className="text-red-800 hover:underline">
             Login
           </Link>
         </p>
+        
         <button
           className="btn bg-[#A75A44] w-full text-base text-white"
-          onClick={() => handleGoogleLogin()}
+          onClick={handleGoogleLogin}
         >
-          Log in with Google
+          Register with Google
         </button>
-
-        
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ const EnrolledRoute = ({children}) => {
     const [redirect, setRedirect] = React.useState(false);
     const courseId=param.courseId;
     const isQuizPage = location.pathname.includes('/enrolled/quiz');
+    
   useEffect(() => {
     if (enLoad && dbUser && !enroll.includes(Number(courseId))) {
       Swal.fire({

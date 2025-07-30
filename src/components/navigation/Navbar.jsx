@@ -1,10 +1,11 @@
 
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { useContext, useState, useEffect } from "react";
-import { authContext } from "../context/AuthProvider";
+import { authContext } from "../../context/AuthProvider";
 import Swal from "sweetalert2";
+import Loading from "../Loading";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -55,15 +56,18 @@ const handleSignOut = async () => {
     }
   };
   
-
   const links = (
     <>
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
-        <li>
+        {
+          dbUser?.role === 'admin' && <li><NavLink to='/admin'>Admin Panel</NavLink></li>
+}
+          <li>
           <NavLink to="/teacher">Instructor</NavLink>
         </li>
+      
         <li>
           <NavLink to="/mylearning">My Learning</NavLink>
         </li>
@@ -170,7 +174,7 @@ const handleSignOut = async () => {
           <FaShoppingCart />
         </Link>
 
-        {user ? (
+        {dbUser ? (
           <div className="dropdown dropdown-end text-black">
             <div tabIndex={0} role="button" className="text-2xl text-gray-600 hover:text-black transition duration-200">
             {
