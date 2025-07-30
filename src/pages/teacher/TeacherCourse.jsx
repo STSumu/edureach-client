@@ -1,7 +1,24 @@
 import React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import useFetch from '../../functions/fetch';
+import { useEffect } from 'react';
+import CourseCard from './CourseCard';
+import Loading from '../../components/Loading';
 
 const TeacherCourse = () => {
+  const [courses,setCourses]=useState();
+   const {fetchTeachingCourses}=useFetch();
+   const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+          const fetchData=async()=>{
+            const data=await fetchTeachingCourses();
+            setCourses(data);
+            setLoading(false);
+          } 
+        fetchData();
+    },[])
+    if(loading) return <Loading></Loading>
     return (
         <div>
            <div className="bg-white rounded-lg shadow p-6 flex flex-col md:flex-row justify-between items-center">
@@ -18,7 +35,10 @@ const TeacherCourse = () => {
               Create Your Course
             </button>
             </Link>
-          </div> 
+          </div>
+          {
+            courses.map((id,idx)=><CourseCard key={idx} course_id={id}></CourseCard>)
+          } 
         </div>
     );
 };

@@ -31,6 +31,7 @@ import EditProfile from "../components/EditProfile";
 import AdminLayout from "../layouts/AdminLayout";
 import Requests from "../pages/admin/Requests"
 import CourseDetail from "../pages/admin/CourseDetail";
+import InstructorDetail from "../pages/admin/InstructorDetail";
 
 
 export const router = createBrowserRouter([
@@ -163,6 +164,10 @@ export const router = createBrowserRouter([
       {
         path:':reqId',
         element:<CourseDetail></CourseDetail>
+      },
+      {
+        path:'instructor/:instId',
+        element:<InstructorDetail></InstructorDetail>
       }
     ]
   },

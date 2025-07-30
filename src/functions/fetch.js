@@ -59,7 +59,7 @@ const useFetch = () => {
       const res = await fetch(`${baseUrl}/teach`, { headers });
       if (!res.ok) throw new Error('Failed to fetch teaching courses');
       const data = await res.json();
-      return data.courses ?? [];
+      return data.mycourses ?? [];
     } catch (err) {
       console.error('Fetch teaching courses error:', err);
       return [];
