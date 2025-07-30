@@ -155,10 +155,6 @@ export const router = createBrowserRouter([
     element: <BeTeacher></BeTeacher>,
   },
   {
-    path: "/upload",
-    element: <Upload></Upload>
-  },
-  {
     path: "/teacher",
     element: (
       <PrivateRoute>
@@ -169,13 +165,17 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "courses",
+        path: "",
         element: <TeacherCourse></TeacherCourse>,
       },
       {
         path: "create",
         element: <CourseRequestPage></CourseRequestPage>,
       },
+      {
+        path:'modify/:course_id',
+        element:<Upload></Upload>
+      }
     ],
   },
   {
@@ -196,6 +196,10 @@ export const router = createBrowserRouter([
       },
       {
         path:'instructor/:instId',
+        element:<InstructorDetail></InstructorDetail>
+      },
+      {
+        path:'instructor/teachers',
         element:<InstructorDetail></InstructorDetail>
       }
     ]

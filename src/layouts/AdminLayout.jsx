@@ -65,7 +65,7 @@ const AdminLayout = () => {
           </NavLink>
 
           <NavLink
-            to="/teacher"
+            to="/admin/teachers"
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2 rounded-md hover:bg-[#EEBF9F] transition ${
                 isActive ? "bg-[#EEBF9F] font-semibold" : ""
@@ -73,7 +73,7 @@ const AdminLayout = () => {
             }
           >
             <FiUsers size={20} />
-            Community
+            Teachers
           </NavLink>
 
           <NavLink
@@ -88,17 +88,7 @@ const AdminLayout = () => {
             Performance
           </NavLink>
 
-          <NavLink
-            to="/teacher/tools"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-md hover:bg-[#EEBF9F] transition ${
-                isActive ? "bg-[#EEBF9F] font-semibold" : ""
-              }`
-            }
-          >
-            <FiTool size={20} />
-            Tools
-          </NavLink>
+          
 
           <NavLink
             to="/teacher/resources"

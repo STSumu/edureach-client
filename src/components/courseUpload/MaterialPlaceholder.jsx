@@ -5,119 +5,36 @@ const MaterialPlaceholder = ({
   index,
   uploadingMaterials,
   removeMaterial,
-  updateMaterial,
   uploadMaterial,
+  updateMaterial,
   materials,
 }) => {
   const isUploading = uploadingMaterials.has(material.id);
   const isUploaded = material.isUploaded;
 
-  return (
-    <div className={`video-placeholder ${isUploaded ? "uploaded" : ""}`}>
-      <style>{`
-        .video-placeholder {
-          background: #fdf8f6;
-          border: 2px dashed #f3d4c3;
-          border-radius: 12px;
-          padding: 25px;
-          margin-bottom: 20px;
-          transition: all 0.3s ease;
-          position: relative;
-        }
-        .video-placeholder.uploaded {
-          background: #f0fdf4;
-          border-color: #16a34a;
-        }
-        .placeholder-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 15px;
-        }
-        .placeholder-title {
-          font-size: 1.2rem;
-          font-weight: 600;
-          color: #2d3748;
-        }
-        .upload-status {
-          color: #16a34a;
-          font-size: 0.9rem;
-          margin-left: 8px;
-        }
-        .remove-btn {
-          background: #ef4444;
-          color: white;
-          border: none;
-          padding: 5px 10px;
-          border-radius: 5px;
-          font-size: 0.8rem;
-          cursor: pointer;
-        }
-        .remove-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-        .placeholder-inputs {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 15px;
-          margin-bottom: 15px;
-        }
-        .input-group {
-          display: flex;
-          flex-direction: column;
-        }
-        .input-label {
-          font-size: 0.9rem;
-          color: #4a5568;
-          margin-bottom: 5px;
-        }
-        .input-field {
-          padding: 10px 12px;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-        }
-        .input-field:focus {
-          outline: none;
-          border-color: #B14E0F;
-        }
-        .input-field:disabled {
-          background: #f9fafb;
-          color: #6b7280;
-        }
-        .link-upload {
-          grid-column: 1 / -1;
-        }
-        .upload-section {
-          margin-top: 20px;
-          text-align: center;
-        }
-        .upload-btn {
-          background: linear-gradient(135deg, #B14E0F, #8A2E00);
-          color: white;
-          border: none;
-          padding: 12px 30px;
-          border-radius: 10px;
-          font-weight: 600;
-          cursor: pointer;
-        }
-        .upload-btn.uploading {
-          background: #9ca3af;
-        }
-        .upload-btn:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-      `}</style>
+  const handleChange = (field, value) => {
+    updateMaterial(material.id, field, value);
+  };
 
-      <div className="placeholder-header">
-        <h3 className="placeholder-title">
+  return (
+    <div
+      className={`transition-all relative rounded-xl p-6 mb-5 border-2 ${
+        isUploaded
+          ? "bg-green-50 border-green-600"
+          : "bg-[#fdf8f6] border-[#f3d4c3]"
+      }`}
+    >
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-xl font-semibold text-[#2d3748]">
           Material {index + 1}
-          {isUploaded && <span className="upload-status">✓ Uploaded</span>}
+          {isUploaded && (
+            <span className="text-green-600 text-sm font-normal ml-2">✓ Uploaded</span>
+          )}
         </h3>
         {materials.length > 1 && !isUploaded && (
           <button
-            className="remove-btn"
+            className="bg-red-500 text-white px-3 py-1 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => removeMaterial(material.id)}
             disabled={isUploading}
           >
@@ -126,40 +43,48 @@ const MaterialPlaceholder = ({
         )}
       </div>
 
-      <div className="placeholder-inputs">
-        <div className="input-group">
-          <label className="input-label">Title</label>
+      {/* Inputs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="flex flex-col">
+          <label htmlFor={`title-${material.id}`} className="text-sm text-gray-700 mb-1">
+            Title
+          </label>
           <input
+            id={`title-${material.id}`}
             type="text"
-            className="input-field"
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#B14E0F] disabled:bg-gray-100 disabled:text-gray-500"
             value={material.title}
             placeholder="Enter material title"
-            onChange={(e) => updateMaterial(material.id, "title", e.target.value)}
             disabled={isUploaded}
+            onChange={(e) => handleChange("title", e.target.value)}
           />
         </div>
 
-        <div className="input-group">
-          <label className="input-label">Order</label>
+        <div className="flex flex-col">
+          <label htmlFor={`order-${material.id}`} className="text-sm text-gray-700 mb-1">
+            Order
+          </label>
           <input
+            id={`order-${material.id}`}
             type="number"
-            className="input-field"
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#B14E0F] disabled:bg-gray-100 disabled:text-gray-500"
             value={material.order}
             min="1"
-            onChange={(e) =>
-              updateMaterial(material.id, "order", parseInt(e.target.value) || 1)
-            }
             disabled={isUploaded}
+            onChange={(e) => handleChange("order", e.target.value)}
           />
         </div>
 
-        <div className="input-group">
-          <label className="input-label">Type</label>
+        <div className="flex flex-col">
+          <label htmlFor={`type-${material.id}`} className="text-sm text-gray-700 mb-1">
+            Type
+          </label>
           <select
-            className="input-field"
+            id={`type-${material.id}`}
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#B14E0F] disabled:bg-gray-100 disabled:text-gray-500"
             value={material.type}
-            onChange={(e) => updateMaterial(material.id, "type", e.target.value)}
             disabled={isUploaded}
+            onChange={(e) => handleChange("type", e.target.value)}
           >
             <option value="video">Video</option>
             <option value="pdf">PDF</option>
@@ -168,23 +93,31 @@ const MaterialPlaceholder = ({
           </select>
         </div>
 
-        <div className="input-group link-upload">
-          <label className="input-label">Link/URL</label>
+        <div className="flex flex-col md:col-span-2">
+          <label htmlFor={`link-${material.id}`} className="text-sm text-gray-700 mb-1">
+            Link/URL
+          </label>
           <input
+            id={`link-${material.id}`}
             type="url"
-            className="input-field"
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#B14E0F] disabled:bg-gray-100 disabled:text-gray-500"
             value={material.link}
             placeholder="Enter link"
-            onChange={(e) => updateMaterial(material.id, "link", e.target.value)}
             disabled={isUploaded}
+            onChange={(e) => handleChange("link", e.target.value)}
           />
         </div>
       </div>
 
+      {/* Upload Button */}
       {!isUploaded && (
-        <div className="upload-section">
+        <div className="text-center mt-5">
           <button
-            className={`upload-btn ${isUploading ? "uploading" : ""}`}
+            className={`px-6 py-3 rounded-lg font-semibold text-white transition-all ${
+              isUploading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-br from-[#B14E0F] to-[#8A2E00] hover:from-[#8A2E00] hover:to-[#B14E0F]"
+            }`}
             onClick={() => uploadMaterial(material.id)}
             disabled={isUploading}
           >

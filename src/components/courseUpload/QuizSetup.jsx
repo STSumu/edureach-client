@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import QuestionPlaceholder from "./QuestionPlaceholder";
+import { authContext } from "../../context/AuthProvider";
+import Swal from "sweetalert2";
 
-const QuizSetup = ({ goBack }) => {
+const QuizSetup = ({ courseId,goBack }) => {
+  const [quizTitle, setQuizTitle] = useState("");
   const [questionCount, setQuestionCount] = useState(1);
   const [questions, setQuestions] = useState([]);
+  const { baseUrl, getTokenHeader } = useContext(authContext);
 
   const generateQuestions = () => {
     const newQuestions = Array.from({ length: questionCount }, (_, index) => ({
@@ -38,92 +42,93 @@ const QuizSetup = ({ goBack }) => {
     );
   };
 
-  const submitQuiz = () => {
+  const submitQuiz = async () => {
+    if (!quizTitle.trim()) {
+      alert("Please enter a quiz title.");
+      return;
+    }
+
     if (
       questions.some(
-        (q) =>
-          !q.question.trim() ||
-          q.options.some((opt) => !opt.trim())
+        (q) => !q.question.trim() || q.options.some((opt) => !opt.trim())
       )
     ) {
       alert("Please complete all questions!");
       return;
     }
-    console.log("Quiz Created:", questions);
-    alert("Quiz Created Successfully!");
-    goBack();
+
+    const headers = await getTokenHeader();
+    const material = {
+      courseId,
+      quizTitle,
+      questions,
+    };
+
+    try {
+      const res = await fetch(`${baseUrl}/teach/quiz`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...headers,
+        },
+        body: JSON.stringify(material),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Upload failed");
+      }
+      Swal.fire({
+        title: "Success",
+        icon: "success",
+        text: `Quiz created successfully.`,
+        draggable: true,
+      });
+      goBack();
+    } catch (err) {
+      console.error("Upload failed:", err);
+      alert(err.message);
+    }
   };
 
   return (
-    <div className="quiz-setup">
-      <style>{`
-        .quiz-setup {
-          text-align: left;
-        }
-        .back-btn {
-          background: #6b7280;
-          color: white;
-          border: none;
-          padding: 10px 20px;
-          border-radius: 8px;
-          margin-bottom: 20px;
-          cursor: pointer;
-        }
-        .back-btn:hover {
-          background: #4b5563;
-        }
-        .setup-title {
-          font-size: 1.8rem;
-          margin-bottom: 25px;
-          text-align: center;
-        }
-        .video-count-section {
-          text-align: center;
-          margin-bottom: 30px;
-        }
-        .video-count-input {
-          padding: 12px 20px;
-          border: 2px solid #e2e8f0;
-          border-radius: 10px;
-          font-size: 1.1rem;
-          width: 150px;
-          text-align: center;
-        }
-        .generate-btn {
-          background: linear-gradient(135deg, #B14E0F, #8A2E00);
-          color: white;
-          border: none;
-          padding: 12px 30px;
-          border-radius: 10px;
-          margin-left: 10px;
-          cursor: pointer;
-        }
-        .add-more-btn {
-          background: linear-gradient(135deg, #B14E0F, #8A2E00);
-          color: white;
-          border: none;
-          padding: 15px 30px;
-          border-radius: 12px;
-          display: block;
-          margin: 20px auto;
-          cursor: pointer;
-          font-weight: 600;
-        }
-      `}</style>
+    <div className="text-left p-6 w-full mx-auto">
+      <button
+        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md mb-5"
+        onClick={goBack}
+      >
+        ← Back to Course Types
+      </button>
 
-      <button className="back-btn" onClick={goBack}>← Back to Course Types</button>
-      <h2 className="setup-title">Create Practice Test Questions</h2>
+      <h2 className="text-3xl font-semibold text-center mb-6">
+        Create Practice Test Questions
+      </h2>
 
-      <div className="video-count-section">
+      <div className="mb-8 max-w-xl mx-auto">
+        <label className="block mb-2 text-lg font-medium">Quiz Title</label>
+        <input
+          type="text"
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-lg"
+          placeholder="Enter quiz title"
+          value={quizTitle}
+          onChange={(e) => setQuizTitle(e.target.value)}
+        />
+      </div>
+
+      <div className="text-center mb-8">
         <input
           type="number"
-          className="video-count-input"
+          className="px-4 py-3 border-2 border-gray-300 rounded-lg text-lg w-32 text-center"
           min="1"
           max="100"
           value={questionCount}
           onChange={(e) => setQuestionCount(parseInt(e.target.value) || 1)}
         />
-        <button className="generate-btn" onClick={generateQuestions}>
+        <button
+          className="ml-4 bg-gradient-to-r from-orange-700 to-orange-900 text-white px-6 py-3 rounded-lg"
+          onClick={generateQuestions}
+        >
           Generate Questions
         </button>
       </div>
@@ -140,7 +145,10 @@ const QuizSetup = ({ goBack }) => {
             />
           ))}
 
-          <button className="add-more-btn" onClick={submitQuiz}>
+          <button
+            className="bg-gradient-to-r from-orange-700 to-orange-900 text-white px-8 py-4 rounded-xl font-semibold block mx-auto mt-6"
+            onClick={submitQuiz}
+          >
             Create Quiz
           </button>
         </>
