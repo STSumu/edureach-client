@@ -1,3 +1,4 @@
+import React, { useContext } from 'react';
 import { Outlet, NavLink, Link } from "react-router-dom";
 import {
   FiBookOpen,
@@ -6,25 +7,25 @@ import {
   FiTool,
   FiHelpCircle,
 } from "react-icons/fi";
-
+import { BsBell } from "react-icons/bs";
 import logo from "../assets/logo.png";
+import { authContext } from '../context/AuthProvider';
+import { FaUserCircle } from 'react-icons/fa';
 import SideNav from '../components/navigation/SideNav';
 
-
-const TeacherLayout = () => {
-    
+const AdminLayout = () => {
+  const{dbUser,user}=useContext(authContext);
     return (
         <div>
              <div className="drawer lg:drawer-open">
   <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
   <div className="drawer-content flex flex-col justify-center">
-       
        <header>
-          <SideNav></SideNav>
-        </header>
+        <SideNav></SideNav>
+       </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-2 md:p-8">
+        <main className="flex-1 p-8">
           <Outlet />
         </main>
     
@@ -32,7 +33,7 @@ const TeacherLayout = () => {
   </div>
   <div className="drawer-side">
     <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-    <ul className="menu bg-[#EEBF9F] lg:bg-[#EEBF9F]/10  min-h-full w-70 p-0">
+    <ul className="menu bg-[#EEBF9F] lg:bg-[#EEBF9F]/10 text-base-content min-h-full w-70 p-0">
 
         <div className="flex flex-col pl-2 md:pl-8 justify-center h-16">
                     <div className="flex items-center gap-2">
@@ -52,7 +53,7 @@ const TeacherLayout = () => {
         {/* Menu */}
         <nav className="flex-1 px-4 py-6 space-y-4 text-sm">
           <NavLink
-            to="/teacher/courses"
+            to="/admin/requests"
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2 rounded-md hover:bg-[#EEBF9F] transition ${
                 isActive ? "bg-[#EEBF9F] font-semibold" : ""
@@ -60,7 +61,7 @@ const TeacherLayout = () => {
             }
           >
             <FiBookOpen size={20} />
-            Courses
+            Course Requests
           </NavLink>
 
           <NavLink
@@ -118,4 +119,4 @@ const TeacherLayout = () => {
     );
 };
 
-export default TeacherLayout;
+export default AdminLayout;

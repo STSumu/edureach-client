@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import Navbar from '../components/navbar';
 import Banner from '../components/Banner';
 import Footer from '../components/Footer';
+import Navbar from '../components/navigation/Navbar';
 
 const HomeLayout = () => {
     return (

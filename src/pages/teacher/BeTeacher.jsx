@@ -5,7 +5,7 @@ import Loading from '../../components/Loading';
 import { useNavigate } from 'react-router-dom';
 
 const BeTeacher = () => {
-    const {dbUser,baseUrl,getTokenHeader,promoteToTeacher}=useContext(authContext);
+    const {dbUser,baseUrl,getTokenHeader,refreshUserProfile}=useContext(authContext);
     const navigate=useNavigate();
   const [form, setForm] = useState({
     expertise: '',
@@ -22,7 +22,7 @@ if(!dbUser) return <Loading></Loading>
   const handleSubmit = async (e) => {
     const headers=await getTokenHeader();
     e.preventDefault();
-    console.log('Submitting instructor info:', form);
+    
 
     try {
       const res = await fetch(`${baseUrl}/teach`, {
@@ -32,10 +32,11 @@ if(!dbUser) return <Loading></Loading>
       });
       const data=await res.json();
       if (!res.ok) throw new Error('Failed to save instructor info');
-      if(data.teacher){
-        console.log(data.instructor_id)
-        navigate('/teacher');
-      }
+      if (data.teacher && data.instructor_id) {
+  await refreshUserProfile();  // ensure DB has teacher
+  navigate('/teacher');     // don't wait for setRole/setDbUser
+}
+
     } catch (err) {
       console.error(err);
       alert('Error submitting your instructor profile.');

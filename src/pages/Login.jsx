@@ -5,7 +5,7 @@ import { authContext } from "../context/AuthProvider";
 import Swal from "sweetalert2";
 
 const Login = () => {
-  const { emaillogin, setUser, googlelogin, syncUser } = useContext(authContext);
+  const { emaillogin, googlelogin, syncUser } = useContext(authContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -16,23 +16,21 @@ const Login = () => {
 
     try {
       const result = await emaillogin(email, pass);
-      setUser(result.user);
-
-      const role = "student";
-
-      const syncResponse = await syncUser(role, result.user.displayName);
-      if (!syncResponse.user_id) throw new Error("Failed to sync user");
+      
+      // Sync user after successful login
+      await syncUser(result.user.displayName || result.user.email);
 
       Swal.fire({
         title: "Success",
         icon: "success",
-        text: `Welcome ${result.user?.displayName || ""}`,
+        text: `Welcome ${result.user?.displayName || result.user?.email}`,
         draggable: true,
       });
 
       e.target.reset();
-      navigate(location.state?.from?.pathname || "/");
+      navigate(location?.state?.from || "/");
     } catch (err) {
+      console.error("Login error:", err);
       Swal.fire({
         icon: "error",
         title: "Login Failed",
@@ -41,25 +39,32 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLogin = async (role) => {
+  const handleGoogleLogin = async () => {
     try {
       const result = await googlelogin();
-      setUser(result.user);
-
-      const syncResponse = await syncUser(role.toLowerCase(), result.user.displayName);
-      if (!syncResponse.user_id) throw new Error("Failed to sync user");
+      
+      // Sync user after successful Google login
+      await syncUser(result.user.displayName || result.user.email);
 
       Swal.fire({
         title: "Success",
         icon: "success",
-        text: "User synced successfully",
+        text: "Login successful",
         confirmButtonText: "OK",
       });
-      document.getElementById("my_modal_1").close();
+      
+      // Close modal if it exists
+      const modal = document.getElementById("my_modal_1");
+      if (modal) modal.close();
+      
       navigate(location.state?.from?.pathname || "/");
     } catch (err) {
-      console.error(err);
-      alert("Google login failed");
+      console.error("Google login error:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Google Login Failed",
+        text: err.message,
+      });
     }
   };
 
@@ -96,6 +101,7 @@ const Login = () => {
 
           <button className="btn bg-[#A75A44] w-full text-base text-white">Login</button>
         </form>
+        
         <p className="text-sm md:text-base">
           Don't have an account?{" "}
           <Link to="/auth/register" className="text-red-800 hover:underline">
@@ -104,13 +110,11 @@ const Login = () => {
         </p>
 
         <button
-          onClick={() => handleGoogleLogin("student")}
+          onClick={handleGoogleLogin}
           className="btn bg-[#A75A44] w-full text-base text-white"
         >
           Log in with Google
         </button>
-
-        
       </div>
     </div>
   );

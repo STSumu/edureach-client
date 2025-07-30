@@ -27,7 +27,9 @@ import Student from "../pages/student/Student";
 import TeacherLayout from "../layouts/TeacherLayout";
 import BeTeacher from "../pages/teacher/BeTeacher";
 import TeacherCourse from "../pages/teacher/teacherCourse";
-
+import AdminLayout from "../layouts/AdminLayout";
+import Requests from "../pages/admin/Requests"
+import CourseDetail from "../pages/admin/CourseDetail";
 
 export const router = createBrowserRouter([
   {
@@ -127,12 +129,12 @@ export const router = createBrowserRouter([
     ]
   },
   {
-        path:'/teacher/log',
+        path:'/teacherlog',
         element:<BeTeacher></BeTeacher>,
       },
   {
     path:'/teacher',
-    element:<TeacherRoute><TeacherLayout></TeacherLayout></TeacherRoute>,
+    element:<PrivateRoute><TeacherRoute><TeacherLayout></TeacherLayout></TeacherRoute></PrivateRoute>,
     children:[
       {
         path:'courses',
@@ -141,6 +143,20 @@ export const router = createBrowserRouter([
       {
         path:'create',
         element:<CourseRequestPage></CourseRequestPage>
+      }
+    ]
+  },
+  {
+    path:'/admin',
+    element:<PrivateRoute><AdminLayout></AdminLayout></PrivateRoute>,
+    children:[
+      {
+        path:'requests',
+        element:<Requests></Requests>
+      },
+      {
+        path:':reqId',
+        element:<CourseDetail></CourseDetail>
       }
     ]
   },
