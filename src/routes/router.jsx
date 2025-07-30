@@ -29,9 +29,9 @@ import BeTeacher from "../pages/teacher/BeTeacher";
 import TeacherCourse from "../pages/teacher/teacherCourse";
 import EditProfile from "../components/EditProfile";
 import AdminLayout from "../layouts/AdminLayout";
-import Requests from "../pages/admin/Requests"
+import Requests from "../pages/admin/Requests";
 import CourseDetail from "../pages/admin/CourseDetail";
-
+import Upload from "../components/courseUpload/Upload";
 
 export const router = createBrowserRouter([
   {
@@ -51,10 +51,14 @@ export const router = createBrowserRouter([
         path: "/courses/:course_id",
         element: <CourseDetails />,
       },
-      
+
       {
-        path:'/mylearning',
-        element:<PrivateRoute><Student></Student></PrivateRoute>,
+        path: "/mylearning",
+        element: (
+          <PrivateRoute>
+            <Student></Student>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/mycourses",
@@ -64,7 +68,7 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      
+
       {
         path: "/cart",
         element: (
@@ -75,7 +79,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/order",
-        element: <PrivateRoute><OrderPage></OrderPage></PrivateRoute>,
+        element: (
+          <PrivateRoute>
+            <OrderPage></OrderPage>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/wish",
@@ -94,77 +102,97 @@ export const router = createBrowserRouter([
         ),
       },
       { path: "/search", element: <SearchResults /> },
-      
+
       {
-        path:'/complete/:courseId',
-        element:<PrivateRoute><CertificatePage></CertificatePage></PrivateRoute>
+        path: "/complete/:courseId",
+        element: (
+          <PrivateRoute>
+            <CertificatePage></CertificatePage>
+          </PrivateRoute>
+        ),
       },
-      
     ],
   },
   {
-        path: "/course_request",
-        element: <CourseRequestPage></CourseRequestPage>
+    path: "/course_request",
+    element: <CourseRequestPage></CourseRequestPage>,
   },
-   {
-        path: "/edit",
-        element: <EditProfile></EditProfile>
-  },
- 
   {
-    
-    path:'/enrolled/',
-    element:<EnrolledRoute><EnrollLayout></EnrollLayout></EnrolledRoute>,
-    children:[
+    path: "/edit",
+    element: <EditProfile></EditProfile>,
+  },
+
+  {
+    path: "/enrolled/",
+    element: (
+      <EnrolledRoute>
+        <EnrollLayout></EnrollLayout>
+      </EnrolledRoute>
+    ),
+    children: [
       {
         path: ":courseId/:matId",
         element: <EnrolledCourse></EnrolledCourse>,
       },
       {
-        path:'quiz/:quizId',
-        element:<QuizPage></QuizPage>
+        path: "quiz/:quizId",
+        element: <QuizPage></QuizPage>,
       },
       {
-        path:'quiz/result/:quizId',
-        element:<QuizResults></QuizResults>
+        path: "quiz/result/:quizId",
+        element: <QuizResults></QuizResults>,
       },
       {
-        path:'certificate/:courseId',
-        element:<CertificatePage></CertificatePage>
-      }
-    ]
+        path: "certificate/:courseId",
+        element: <CertificatePage></CertificatePage>,
+      },
+    ],
   },
   {
-        path:'/teacherlog',
-        element:<BeTeacher></BeTeacher>,
-      },
-  {
-    path:'/teacher',
-    element:<PrivateRoute><TeacherRoute><TeacherLayout></TeacherLayout></TeacherRoute></PrivateRoute>,
-    children:[
-      {
-        path:'courses',
-        element:<TeacherCourse></TeacherCourse>,
-      },
-      {
-        path:'create',
-        element:<CourseRequestPage></CourseRequestPage>
-      }
-    ]
+    path: "/teacherlog",
+    element: <BeTeacher></BeTeacher>,
   },
   {
-    path:'/admin',
-    element:<PrivateRoute><AdminLayout></AdminLayout></PrivateRoute>,
-    children:[
+    path: "/upload",
+    element: <Upload></Upload>
+  },
+  {
+    path: "/teacher",
+    element: (
+      <PrivateRoute>
+        <TeacherRoute>
+          <TeacherLayout></TeacherLayout>
+        </TeacherRoute>
+      </PrivateRoute>
+    ),
+    children: [
       {
-        path:'requests',
-        element:<Requests></Requests>
+        path: "courses",
+        element: <TeacherCourse></TeacherCourse>,
       },
       {
-        path:':reqId',
-        element:<CourseDetail></CourseDetail>
-      }
-    ]
+        path: "create",
+        element: <CourseRequestPage></CourseRequestPage>,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: (
+      <PrivateRoute>
+        <AdminLayout></AdminLayout>
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "requests",
+        element: <Requests></Requests>,
+      },
+      {
+        path: ":reqId",
+        element: <CourseDetail></CourseDetail>,
+      },
+    ],
   },
   {
     path: "/auth",
