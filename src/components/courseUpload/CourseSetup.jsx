@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import MaterialPlaceholder from "./MaterialPlaceholder";
-import "./Upload.css"; // you can keep this or remove if styles overlap
+import { useContext } from "react";
+import { authContext } from "../../context/AuthProvider";
+import Swal from "sweetalert2";
 
-const CourseSetup = ({ goBack }) => {
+const CourseSetup = ({ courseId,goBack }) => {
   const [materials, setMaterials] = useState([]);
   const [uploadingMaterials, setUploadingMaterials] = useState(new Set());
+  const {baseUrl,getTokenHeader}=useContext(authContext);
 
   const addMoreMaterial = () => {
     const newMaterial = {
-      id: Date.now(),
+      id:new Date(),
+      courseId,
       title: "",
       order: materials.length + 1,
       link: "",
@@ -32,87 +36,75 @@ const CourseSetup = ({ goBack }) => {
   };
 
   const uploadMaterial = async (id) => {
-    const material = materials.find((m) => m.id === id);
-    if (!material.title.trim() || !material.link.trim()) {
-      alert("Please fill all fields before uploading!");
-      return;
+  const material = materials.find((m) => m.id === id);
+  if (!material.title.trim() || !material.link.trim()) {
+    alert("Please fill all fields before uploading!");
+    return;
+  }
+
+  const headers = await getTokenHeader();
+  try {
+    setUploadingMaterials((prev) => new Set([...prev, id]));
+    const res = await fetch(`${baseUrl}/teach/mat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
+      body: JSON.stringify(material),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.message || "Upload failed");
     }
 
-    setUploadingMaterials((prev) => new Set([...prev, id]));
-    await new Promise((res) => setTimeout(res, 2000));
-
-    setMaterials(
-      materials.map((m) => (m.id === id ? { ...m, isUploaded: true } : m))
+    const returned = data.material;
+    
+    setMaterials((prev) =>
+      prev.map((m) =>
+        m.id === id
+          ? {
+              ...returned,
+              isUploaded: true, // maintain upload state
+            }
+          : m
+      )
     );
+    Swal.fire({
+            title: "Success",
+            icon: "success",
+            text: `Material Successfully Uploaded.`,
+            draggable: true,
+          });
+  } catch (err) {
+    console.error("Upload failed:", err);
+    alert(err.message);
+  } finally {
     setUploadingMaterials((prev) => {
       const newSet = new Set(prev);
       newSet.delete(id);
       return newSet;
     });
-  };
+  }
+};
+
 
   const canAddMore = () =>
     materials.length === 0 || materials.every((m) => m.isUploaded);
 
   return (
-    <div className="video-setup">
-      {/* Theme styles inline to match Upload component */}
-      <style>{`
-        .video-setup {
-          background: white;
-          border-radius: 20px;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-          padding: 40px;
-          max-width: 900px;
-          width: 100%;
-          font-family: 'Segoe UI', sans-serif;
-          color: #2c3e50;
-          margin: auto;
-          box-sizing: border-box;
-        }
-        .back-btn {
-          background: transparent;
-          border: none;
-          font-size: 1rem;
-          color: #B14E0F;
-          cursor: pointer;
-          margin-bottom: 20px;
-          transition: color 0.3s ease;
-        }
-        .back-btn:hover {
-          color: #8A2E00;
-        }
-        .setup-title {
-          font-size: 2rem;
-          margin-bottom: 30px;
-          font-weight: 600;
-          text-align: center;
-          color: #B14E0F;
-        }
-        .add-more-btn {
-          background: linear-gradient(135deg, #B14E0F, #8A2E00);
-          color: white;
-          border: none;
-          padding: 12px 30px;
-          border-radius: 12px;
-          font-size: 1rem;
-          cursor: pointer;
-          margin-top: 30px;
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
-          box-shadow: 0 5px 15px rgba(177, 78, 15, 0.4);
-          transition: background 0.3s ease;
-        }
-        .add-more-btn:hover {
-          background: linear-gradient(135deg, #8A2E00, #B14E0F);
-        }
-      `}</style>
-
-      <button className="back-btn" onClick={goBack}>
+    <div className="bg-white rounded-[20px] shadow-[0_20px_40px_rgba(0,0,0,0.1)] px-6 md:px-10 py-10 max-w-[900px] w-full mx-auto font-sans text-[#2c3e50] box-border">
+      <button
+        className="bg-transparent border-none text-[#B14E0F] text-base cursor-pointer mb-5 hover:text-[#8A2E00] transition-colors duration-300"
+        onClick={goBack}
+      >
         ← Back to Course Types
       </button>
-      <h2 className="setup-title">Set up your course materials</h2>
+      <h2 className="text-[2rem] mb-8 font-semibold text-center text-[#B14E0F]">
+        Set up your course materials
+      </h2>
 
       {materials.map((material, index) => (
         <MaterialPlaceholder
@@ -128,7 +120,10 @@ const CourseSetup = ({ goBack }) => {
       ))}
 
       {canAddMore() && (
-        <button className="add-more-btn" onClick={addMoreMaterial}>
+        <button
+          className="bg-gradient-to-br from-[#B14E0F] to-[#8A2E00] text-white border-none px-8 py-3 rounded-xl text-base cursor-pointer mt-8 block mx-auto shadow-[0_5px_15px_rgba(177,78,15,0.4)] hover:from-[#8A2E00] hover:to-[#B14E0F] transition-all duration-300"
+          onClick={addMoreMaterial}
+        >
           + Add Material
         </button>
       )}
@@ -137,4 +132,3 @@ const CourseSetup = ({ goBack }) => {
 };
 
 export default CourseSetup;
-  
