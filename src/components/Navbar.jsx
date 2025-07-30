@@ -214,6 +214,10 @@ const handleSignOut = async () => {
               <li className="border-b-1 border-gray-300">
                 <Link to='/wish'>My WishList</Link>
               </li>
+              <li className="border-b-1 border-gray-300">
+                <Link to='/edit'>My Profile</Link>
+              </li>
+
               <li>
                 <button onClick={handleSignOut}>Sign Out</button>
               </li>

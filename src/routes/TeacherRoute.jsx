@@ -11,7 +11,7 @@ const TeacherRoute = ({children}) => {
     return <Navigate to="/auth/login" />;
   }
 
-  if (dbUser && !dbUser2) {
+  if (dbUser2.role !== 'teacher') {
     return <Navigate to="/teacher/log" />;
   }
 
